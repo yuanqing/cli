@@ -1,16 +1,15 @@
-import { CommandConfig, PositionalConfig } from './types'
+import { CommandConfig, PositionalConfig } from '../types'
 
-export function createHelp(
+export function createCommandHelp(
   name: string,
-  commandConfig?: CommandConfig
+  commandConfig: CommandConfig
 ): string {
   const result = []
-  if (typeof commandConfig === 'undefined') {
-    throw new Error('`mainCommandConfig` not defined')
-  }
   const positionals = stringifyPositionals(commandConfig.positionals)
   const options =
     typeof commandConfig.options === 'undefined' ? '' : '[options]'
+  result.push('')
+  result.push(`  ${commandConfig.description}`)
   result.push('')
   result.push('  Usage:')
   result.push(`    $ ${[name, positionals, options].join(' ')}`)
@@ -30,6 +29,7 @@ export function createHelp(
       const flags = stringifyFlags(optionConfig.name, optionConfig.shorthands)
       result.push(`    ${flags}  ${optionConfig.description}`)
     }
+    result.push('    -h, --help  Print this message')
     result.push('')
   }
   if (typeof commandConfig.examples !== 'undefined') {
@@ -64,5 +64,5 @@ function stringifyFlags(name: string, shorthands?: Array<string>): string {
   for (const shorthand of shorthands) {
     result.push(`-${shorthand}`)
   }
-  return [mainFlag, result].join(', ')
+  return [result, mainFlag].join(', ')
 }

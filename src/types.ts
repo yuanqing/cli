@@ -1,10 +1,12 @@
 export type CliConfig = {
   name: string
   version: string
-  description?: string
+  description: string
+  examples?: Array<string>
 }
 
 export type CommandConfig = {
+  description: string
   positionals?: Array<PositionalConfig>
   options?: Array<OptionConfig>
   handler: (
