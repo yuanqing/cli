@@ -1,4 +1,5 @@
 import { CommandConfig } from '../types'
+import { stringifyExamples } from './utilities/stringify-examples'
 
 export function createCommandsHelp(
   name: string,
@@ -13,22 +14,30 @@ export function createCommandsHelp(
   result.push('  Usage:')
   result.push(`    $ ${name} [command] [options]`)
   result.push('')
-  result.push('  Commands:')
-  for (const name in commandConfigs) {
-    const commandConfig = commandConfigs[name]
-    result.push(`    ${name}  ${commandConfig.description}`)
+  if (Object.keys(commandConfigs).length > 0) {
+    result.push('  Commands:')
+    result.push(stringifyCommands(commandConfigs))
+    result.push('')
   }
-  result.push('')
   result.push('  Options:')
   result.push('    -h, --help  Print this message')
   result.push('    -v, --version  Print the version number')
   result.push('')
   if (typeof examples !== 'undefined' && examples.length !== 0) {
     result.push('  Examples:')
-    for (const example of examples) {
-      result.push(`    $ ${name} ${example}`)
-    }
+    result.push(stringifyExamples(examples))
     result.push('')
+  }
+  return result.join('\n')
+}
+
+function stringifyCommands(commandConfigs: {
+  [key: string]: CommandConfig
+}): string {
+  const result = []
+  for (const commandName in commandConfigs) {
+    const commandConfig = commandConfigs[commandName]
+    result.push(`    ${commandName}  ${commandConfig.description}`)
   }
   return result.join('\n')
 }

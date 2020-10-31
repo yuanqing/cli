@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { createCommandsHelp } from './help/create-commands-help'
+import { createHelp } from './help/create-help'
 import { runCommand } from './run-command'
 import { CliConfig, CommandConfig } from './types'
 
@@ -26,12 +27,18 @@ export function createCommandsCli(
       return
     }
   }
-  if (typeof commandConfigs[firstArg] === 'undefined') {
+  const commandConfig = commandConfigs[firstArg]
+  if (typeof commandConfig === 'undefined') {
     throw new Error(`Unrecognized command: ${firstArg}`)
+  }
+  const secondArg = args[1]
+  if (secondArg === '--help' || secondArg === '-h') {
+    console.log(createHelp(cliConfig.name, commandConfig))
+    return
   }
   return runCommand(
     args.slice(1),
     `${cliConfig.name} ${firstArg}`,
-    commandConfigs[firstArg]
+    commandConfig
   )
 }

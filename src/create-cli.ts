@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { createCommandHelp } from './help/create-command-help'
+import { createHelp } from './help/create-help'
 import { runCommand } from './run-command'
 import { CliConfig, CommandConfig } from './types'
 
@@ -15,7 +15,7 @@ export function createCli(
       return
     }
     if (firstArg === '--help' || firstArg === '-h') {
-      console.log(createCommandHelp(cliConfig.name, commandConfig))
+      console.log(createHelp(cliConfig.name, commandConfig))
       return
     }
   }
