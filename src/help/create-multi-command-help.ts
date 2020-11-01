@@ -4,13 +4,15 @@ import { stringifyExamples } from './utilities/stringify-examples'
 export function createMultiCommandHelp(
   name: string,
   commandConfigs: { [key: string]: CommandConfig },
-  description: string,
+  description?: string,
   examples?: Array<string>
 ): string {
   const result = []
   result.push('')
-  result.push(`  ${description}`)
-  result.push('')
+  if (typeof description !== 'undefined') {
+    result.push(`  ${description}`)
+    result.push('')
+  }
   result.push('  Usage:')
   result.push(`    $ ${name} <command> [options]`)
   result.push('')

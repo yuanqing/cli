@@ -5,8 +5,10 @@ import { stringifyExamples } from './utilities/stringify-examples'
 export function createHelp(name: string, commandConfig: CommandConfig): string {
   const result = []
   result.push('')
-  result.push(`  ${commandConfig.description}`)
-  result.push('')
+  if (typeof commandConfig.description !== 'undefined') {
+    result.push(`  ${commandConfig.description}`)
+    result.push('')
+  }
   result.push('  Usage:')
   result.push(
     `    $ ${stringifyCliArgs(
@@ -50,9 +52,11 @@ function stringifyPositionals(
 ): string {
   const result = []
   for (const positionalConfig of positionalConfigs) {
-    result.push(
-      `    <${positionalConfig.name}>  ${positionalConfig.description}`
-    )
+    const line = [`    <${positionalConfig.name}>`]
+    if (typeof positionalConfig.description !== 'undefined') {
+      line.push(positionalConfig.description)
+    }
+    result.push(line.join('  '))
   }
   return result.join('\n')
 }
@@ -61,7 +65,11 @@ function stringifyOptions(optionConfigs: Array<OptionConfig>): string {
   const result = []
   for (const optionConfig of optionConfigs) {
     const flags = stringifyFlags(optionConfig.name, optionConfig.shorthands)
-    result.push(`    ${flags}  ${optionConfig.description}`)
+    const line = [`    ${flags}`]
+    if (typeof optionConfig.description !== 'undefined') {
+      line.push(optionConfig.description)
+    }
+    result.push(line.join('  '))
   }
   return result.join('\n')
 }

@@ -47,14 +47,14 @@ export function parseArgs(
             continue
           }
           throw new Error(
-            `Positional <${positionalName}> must be one of 'true' or 'false' but got '${arg}'`
+            `Argument <${positionalName}> must be one of 'true' or 'false' but got '${arg}'`
           )
         }
         case 'number': {
           const number = parseNumber(arg)
           if (number === null) {
             throw new Error(
-              `Positional <${positionalName}> must be a number but got '${arg}'`
+              `Argument <${positionalName}> must be a number but got '${arg}'`
             )
           }
           positionals[positionalName] = number
@@ -75,7 +75,7 @@ export function parseArgs(
                 positionalConfig.type.indexOf(number) === -1
               ) {
                 throw new Error(
-                  `Positional <${positionalName}> must be one of ${stringifyValues<
+                  `Argument <${positionalName}> must be one of ${stringifyValues<
                     number
                   >(positionalConfig.type)} but got '${arg}'`
                 )
@@ -86,7 +86,7 @@ export function parseArgs(
             }
             if (positionalConfig.type.indexOf(arg) === -1) {
               throw new Error(
-                `Positional <${positionalName}> must be one of ${stringifyValues<
+                `Argument <${positionalName}> must be one of ${stringifyValues<
                   string
                 >(positionalConfig.type)} but got '${arg}'`
               )
@@ -109,15 +109,32 @@ export function parseArgs(
       stopParsingOptions = true
       continue
     }
+    const optionConfig = findOptionConfig(optionName, optionConfigs)
+    if (typeof optionConfigs === 'undefined' || optionConfig === null) {
+      // Try to parse `arg` as a negative number for a positional argument
+      if (typeof positionalConfigs !== 'undefined') {
+        const positionalConfig = positionalConfigs[positionalIndex]
+        if (typeof positionalConfig !== 'undefined') {
+          const number = parseNumber(arg)
+          if (number !== null) {
+            const positionalName = positionalConfig.name
+            if (
+              positionalConfig.type === 'number' ||
+              (Array.isArray(positionalConfig.type) &&
+                isNumberArray(positionalConfig.type) &&
+                positionalConfig.type.indexOf(number) !== -1)
+            ) {
+              positionals[positionalName] = number
+              positionalIndex++
+              continue
+            }
+          }
+        }
+      }
+      throw new Error(`Invalid option: ${optionName}`)
+    }
     if (typeof options[optionName] !== 'undefined') {
       throw new Error(`Duplicate option: ${optionName}`)
-    }
-    if (typeof optionConfigs === 'undefined') {
-      throw new Error(`Unrecognized option: ${optionName}`)
-    }
-    const optionConfig = findOptionConfig(optionName, optionConfigs)
-    if (optionConfig === null) {
-      throw new Error(`Unrecognized option: ${optionName}`)
     }
     const nextArg = args[index + 1]
     const isNextArgValid =
@@ -203,7 +220,7 @@ export function parseArgs(
           continue
         }
         if (positionalConfig.required === true) {
-          throw new Error(`Positional <${positionalConfig.name}> is required`)
+          throw new Error(`Argument <${positionalConfig.name}> is required`)
         }
       }
     }

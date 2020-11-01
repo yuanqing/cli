@@ -31,7 +31,7 @@ export function createMultiCommandCli(
   const commandConfig = commandConfigs[firstArg]
   if (typeof commandConfig === 'undefined') {
     if (typeof defaultCommandConfig === 'undefined') {
-      throw new Error(`Unrecognized command: ${firstArg}`)
+      throw new Error(`Invalid command: ${firstArg}`)
     }
     return runCommand(args, defaultCommandConfig)
   }
