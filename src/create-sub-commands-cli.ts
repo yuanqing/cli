@@ -7,7 +7,8 @@ import { CliConfig, CommandConfig } from './types'
 export function createSubCommandsCli(
   args: Array<string>,
   cliConfig: CliConfig,
-  subCommandConfigs: { [key: string]: CommandConfig }
+  subCommandConfigs: { [key: string]: CommandConfig },
+  mainCommandConfig?: CommandConfig
 ): unknown {
   const firstArg = args[0]
   if (args.length === 1) {
@@ -29,7 +30,10 @@ export function createSubCommandsCli(
   }
   const subCommandConfig = subCommandConfigs[firstArg]
   if (typeof subCommandConfig === 'undefined') {
-    throw new Error(`Unrecognized command: ${firstArg}`)
+    if (typeof mainCommandConfig === 'undefined') {
+      throw new Error(`Unrecognized command: ${firstArg}`)
+    }
+    return runCommand(args, mainCommandConfig)
   }
   const secondArg = args[1]
   if (secondArg === '--help' || secondArg === '-h') {
