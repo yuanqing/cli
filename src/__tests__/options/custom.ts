@@ -8,10 +8,20 @@ const cliConfig = {
   version: '1.0.0'
 }
 
+function parseCustomType(value: string) {
+  if (value === '-1') {
+    return 'A'
+  }
+  if (value === '2') {
+    return 'B'
+  }
+  return null
+}
+
 test('no `args`', function (t) {
   t.plan(3)
   const args: Array<string> = []
-  const options: Array<OptionConfig> = [{ name: 'foo', type: ['x', 'y'] }]
+  const options: Array<OptionConfig> = [{ name: 'foo', type: parseCustomType }]
   const handler: CommandHandler = function (positionals, options, remainder) {
     t.deepEqual(positionals, {})
     t.deepEqual(options, {})
@@ -24,11 +34,11 @@ test('no `args` - default', function (t) {
   t.plan(3)
   const args: Array<string> = []
   const options: Array<OptionConfig> = [
-    { default: 'y', name: 'foo', type: ['x', 'y'] }
+    { default: 'B', name: 'foo', type: parseCustomType }
   ]
   const handler: CommandHandler = function (positionals, options, remainder) {
     t.deepEqual(positionals, {})
-    t.deepEqual(options, { foo: 'y' })
+    t.deepEqual(options, { foo: 'B' })
     t.deepEqual(remainder, [])
   }
   createCli(args, cliConfig, { handler, options })
@@ -38,7 +48,7 @@ test('no `args` - required', function (t) {
   t.plan(1)
   const args: Array<string> = []
   const options: Array<OptionConfig> = [
-    { name: 'foo', required: true, type: ['x', 'y'] }
+    { name: 'foo', required: true, type: parseCustomType }
   ]
   const handler: CommandHandler = function () {
     t.fail()
@@ -52,11 +62,23 @@ test('no `args` - required', function (t) {
 
 test('with `args`', function (t) {
   t.plan(3)
-  const args: Array<string> = ['--foo', 'x']
-  const options: Array<OptionConfig> = [{ name: 'foo', type: ['x', 'y'] }]
+  const args: Array<string> = ['--foo', '2']
+  const options: Array<OptionConfig> = [{ name: 'foo', type: parseCustomType }]
   const handler: CommandHandler = function (positionals, options, remainder) {
     t.deepEqual(positionals, {})
-    t.deepEqual(options, { foo: 'x' })
+    t.deepEqual(options, { foo: 'B' })
+    t.deepEqual(remainder, [])
+  }
+  createCli(args, cliConfig, { handler, options })
+})
+
+test('with `args` - dash prefix', function (t) {
+  t.plan(3)
+  const args: Array<string> = ['--foo', '-1']
+  const options: Array<OptionConfig> = [{ name: 'foo', type: parseCustomType }]
+  const handler: CommandHandler = function (positionals, options, remainder) {
+    t.deepEqual(positionals, {})
+    t.deepEqual(options, { foo: 'A' })
     t.deepEqual(remainder, [])
   }
   createCli(args, cliConfig, { handler, options })
@@ -64,13 +86,13 @@ test('with `args`', function (t) {
 
 test('with `args` - default', function (t) {
   t.plan(3)
-  const args: Array<string> = ['--foo', 'x']
+  const args: Array<string> = ['--foo', '-1']
   const options: Array<OptionConfig> = [
-    { default: 'y', name: 'foo', type: ['x', 'y'] }
+    { default: 'B', name: 'foo', type: parseCustomType }
   ]
   const handler: CommandHandler = function (positionals, options, remainder) {
     t.deepEqual(positionals, {})
-    t.deepEqual(options, { foo: 'x' })
+    t.deepEqual(options, { foo: 'A' })
     t.deepEqual(remainder, [])
   }
   createCli(args, cliConfig, { handler, options })
@@ -78,13 +100,13 @@ test('with `args` - default', function (t) {
 
 test('with `args` - required', function (t) {
   t.plan(3)
-  const args: Array<string> = ['--foo', 'x']
+  const args: Array<string> = ['--foo', '-1']
   const options: Array<OptionConfig> = [
-    { name: 'foo', required: true, type: ['x', 'y'] }
+    { name: 'foo', required: true, type: parseCustomType }
   ]
   const handler: CommandHandler = function (positionals, options, remainder) {
     t.deepEqual(positionals, {})
-    t.deepEqual(options, { foo: 'x' })
+    t.deepEqual(options, { foo: 'A' })
     t.deepEqual(remainder, [])
   }
   createCli(args, cliConfig, { handler, options })
@@ -93,30 +115,27 @@ test('with `args` - required', function (t) {
 test('with `args` - flag without value', function (t) {
   t.plan(1)
   const args: Array<string> = ['--foo']
-  const options: Array<OptionConfig> = [{ name: 'foo', type: ['x', 'y'] }]
+  const options: Array<OptionConfig> = [{ name: 'foo', type: parseCustomType }]
   const handler: CommandHandler = function () {
     t.fail()
   }
   try {
     createCli(args, cliConfig, { handler, options })
   } catch (error) {
-    t.equal(error.message, "Option --foo must be one of 'x' or 'y'")
+    t.equal(error.message, 'Option --foo expects a value')
   }
 })
 
-test('with `args` - string not in pre-defined set', function (t) {
+test('with `args` - invalid value', function (t) {
   t.plan(1)
   const args: Array<string> = ['--foo', 'bar']
-  const options: Array<OptionConfig> = [{ name: 'foo', type: ['x', 'y'] }]
+  const options: Array<OptionConfig> = [{ name: 'foo', type: parseCustomType }]
   const handler: CommandHandler = function () {
     t.fail()
   }
   try {
     createCli(args, cliConfig, { handler, options })
   } catch (error) {
-    t.equal(
-      error.message,
-      "Option --foo must be one of 'x' or 'y' but got 'bar'"
-    )
+    t.equal(error.message, "Invalid option --foo: 'bar'")
   }
 })

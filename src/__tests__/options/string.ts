@@ -12,14 +12,10 @@ test('no `args`', function (t) {
   t.plan(3)
   const args: Array<string> = []
   const options: Array<OptionConfig> = [{ name: 'foo', type: 'string' }]
-  const handler: CommandHandler = async function (
-    positionals,
-    options,
-    remainder
-  ) {
-    t.deepEqual({}, positionals)
-    t.deepEqual({}, options)
-    t.deepEqual([], remainder)
+  const handler: CommandHandler = function (positionals, options, remainder) {
+    t.deepEqual(positionals, {})
+    t.deepEqual(options, {})
+    t.deepEqual(remainder, [])
   }
   createCli(args, cliConfig, { handler, options })
 })
@@ -30,14 +26,10 @@ test('no `args` - default', function (t) {
   const options: Array<OptionConfig> = [
     { default: 'y', name: 'foo', type: 'string' }
   ]
-  const handler: CommandHandler = async function (
-    positionals,
-    options,
-    remainder
-  ) {
-    t.deepEqual({}, positionals)
-    t.deepEqual({ foo: 'y' }, options)
-    t.deepEqual([], remainder)
+  const handler: CommandHandler = function (positionals, options, remainder) {
+    t.deepEqual(positionals, {})
+    t.deepEqual(options, { foo: 'y' })
+    t.deepEqual(remainder, [])
   }
   createCli(args, cliConfig, { handler, options })
 })
@@ -48,7 +40,7 @@ test('no `args` - required', function (t) {
   const options: Array<OptionConfig> = [
     { name: 'foo', required: true, type: 'string' }
   ]
-  const handler: CommandHandler = async function () {
+  const handler: CommandHandler = function () {
     t.fail()
   }
   try {
@@ -62,14 +54,10 @@ test('with `args`', function (t) {
   t.plan(3)
   const args: Array<string> = ['--foo', 'x']
   const options: Array<OptionConfig> = [{ name: 'foo', type: 'string' }]
-  const handler: CommandHandler = async function (
-    positionals,
-    options,
-    remainder
-  ) {
-    t.deepEqual({}, positionals)
-    t.deepEqual({ foo: 'x' }, options)
-    t.deepEqual([], remainder)
+  const handler: CommandHandler = function (positionals, options, remainder) {
+    t.deepEqual(positionals, {})
+    t.deepEqual(options, { foo: 'x' })
+    t.deepEqual(remainder, [])
   }
   createCli(args, cliConfig, { handler, options })
 })
@@ -80,14 +68,10 @@ test('with `args` - default', function (t) {
   const options: Array<OptionConfig> = [
     { default: 'y', name: 'foo', type: 'string' }
   ]
-  const handler: CommandHandler = async function (
-    positionals,
-    options,
-    remainder
-  ) {
-    t.deepEqual({}, positionals)
-    t.deepEqual({ foo: 'x' }, options)
-    t.deepEqual([], remainder)
+  const handler: CommandHandler = function (positionals, options, remainder) {
+    t.deepEqual(positionals, {})
+    t.deepEqual(options, { foo: 'x' })
+    t.deepEqual(remainder, [])
   }
   createCli(args, cliConfig, { handler, options })
 })
@@ -98,14 +82,10 @@ test('with `args` - required', function (t) {
   const options: Array<OptionConfig> = [
     { name: 'foo', required: true, type: 'string' }
   ]
-  const handler: CommandHandler = async function (
-    positionals,
-    options,
-    remainder
-  ) {
-    t.deepEqual({}, positionals)
-    t.deepEqual({ foo: 'x' }, options)
-    t.deepEqual([], remainder)
+  const handler: CommandHandler = function (positionals, options, remainder) {
+    t.deepEqual(positionals, {})
+    t.deepEqual(options, { foo: 'x' })
+    t.deepEqual(remainder, [])
   }
   createCli(args, cliConfig, { handler, options })
 })
@@ -114,7 +94,7 @@ test('with `args` - flag without value', function (t) {
   t.plan(1)
   const args: Array<string> = ['--foo']
   const options: Array<OptionConfig> = [{ name: 'foo', type: 'string' }]
-  const handler: CommandHandler = async function () {
+  const handler: CommandHandler = function () {
     t.fail()
   }
   try {

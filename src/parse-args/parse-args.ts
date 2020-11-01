@@ -97,7 +97,7 @@ export function parseArgs(
           }
           const value = positionalConfig.type(arg)
           if (value === null) {
-            throw new Error(`Invalid positional <${positionalName}>: '${arg}'`)
+            throw new Error(`Invalid argument <${positionalName}>: '${arg}'`)
           }
           positionals[positionalName] = value
           positionalIndex++
@@ -115,26 +115,35 @@ export function parseArgs(
       if (typeof positionalConfigs !== 'undefined') {
         const positionalConfig = positionalConfigs[positionalIndex]
         if (typeof positionalConfig !== 'undefined') {
-          const number = parseNumber(arg)
-          if (number !== null) {
-            const positionalName = positionalConfig.name
-            if (
-              positionalConfig.type === 'number' ||
-              (Array.isArray(positionalConfig.type) &&
-                isNumberArray(positionalConfig.type) &&
-                positionalConfig.type.indexOf(number) !== -1)
-            ) {
-              positionals[positionalName] = number
+          const positionalName = positionalConfig.name
+          if (typeof positionalConfig.type === 'function') {
+            const value = positionalConfig.type(arg)
+            if (value !== null) {
+              positionals[positionalName] = value
               positionalIndex++
               continue
+            }
+          } else {
+            const number = parseNumber(arg)
+            if (number !== null) {
+              if (
+                positionalConfig.type === 'number' ||
+                (Array.isArray(positionalConfig.type) &&
+                  isNumberArray(positionalConfig.type) &&
+                  positionalConfig.type.indexOf(number) !== -1)
+              ) {
+                positionals[positionalName] = number
+                positionalIndex++
+                continue
+              }
             }
           }
         }
       }
-      throw new Error(`Invalid option: ${optionName}`)
+      throw new Error(`Invalid option: ${arg}`)
     }
     if (typeof options[optionName] !== 'undefined') {
-      throw new Error(`Duplicate option: ${optionName}`)
+      throw new Error(`Duplicate option: ${arg}`)
     }
     const nextArg = args[index + 1]
     const isNextArgValid =
@@ -143,7 +152,7 @@ export function parseArgs(
       parseOptionName(nextArg) === null
     switch (optionConfig.type) {
       case 'boolean': {
-        options[optionName] = true
+        options[optionConfig.name] = true
         continue
       }
       case 'number': {
@@ -154,7 +163,7 @@ export function parseArgs(
           }
           throw new Error(`Option ${arg} must be a number but got '${nextArg}'`)
         }
-        options[optionName] = number
+        options[optionConfig.name] = number
         index++ // consume `nextArg`
         continue
       }
@@ -162,31 +171,38 @@ export function parseArgs(
         if (isNextArgValid === false) {
           throw new Error(`Option ${arg} must be a string`)
         }
-        options[optionName] = nextArg
+        options[optionConfig.name] = nextArg
         index++ // consume `nextArg`
         continue
       }
       default: {
         if (Array.isArray(optionConfig.type)) {
-          if (isNextArgValid === false) {
-            throw new Error(
-              `Option ${arg} must be one of ${stringifyValues<number | string>(
-                optionConfig.type
-              )}`
-            )
-          }
           if (isNumberArray(optionConfig.type)) {
             const number = parseNumber(nextArg)
             if (number === null || optionConfig.type.indexOf(number) === -1) {
+              if (typeof nextArg === 'undefined') {
+                throw new Error(
+                  `Option ${arg} must be one of ${stringifyValues<number>(
+                    optionConfig.type
+                  )}`
+                )
+              }
               throw new Error(
                 `Option ${arg} must be one of ${stringifyValues<number>(
                   optionConfig.type
                 )} but got '${nextArg}'`
               )
             }
-            options[optionName] = number
+            options[optionConfig.name] = number
             index++ // consume `nextArg`
             continue
+          }
+          if (isNextArgValid === false) {
+            throw new Error(
+              `Option ${arg} must be one of ${stringifyValues<string>(
+                optionConfig.type
+              )}`
+            )
           }
           if (optionConfig.type.indexOf(nextArg) === -1) {
             throw new Error(
@@ -195,7 +211,7 @@ export function parseArgs(
               )} but got '${nextArg}'`
             )
           }
-          options[optionName] = nextArg
+          options[optionConfig.name] = nextArg
           index++ // consume `nextArg`
           continue
         }
@@ -206,17 +222,16 @@ export function parseArgs(
           }
           throw new Error(`Invalid option ${arg}: '${nextArg}'`)
         }
-        options[optionName] = value
+        options[optionConfig.name] = value
         index++ // consume `nextArg`
       }
     }
   }
   if (typeof positionalConfigs !== 'undefined') {
     for (const positionalConfig of positionalConfigs) {
-      const positionalName = positionalConfig.name
-      if (typeof positionals[positionalName] === 'undefined') {
+      if (typeof positionals[positionalConfig.name] === 'undefined') {
         if (typeof positionalConfig.default !== 'undefined') {
-          positionals[positionalName] = positionalConfig.default
+          positionals[positionalConfig.name] = positionalConfig.default
           continue
         }
         if (positionalConfig.required === true) {
@@ -227,10 +242,9 @@ export function parseArgs(
   }
   if (typeof optionConfigs !== 'undefined') {
     for (const optionConfig of optionConfigs) {
-      const optionName = optionConfig.name
-      if (typeof options[optionName] === 'undefined') {
+      if (typeof options[optionConfig.name] === 'undefined') {
         if (typeof optionConfig.default !== 'undefined') {
-          options[optionName] = optionConfig.default
+          options[optionConfig.name] = optionConfig.default
           continue
         }
         if (optionConfig.required === true) {
