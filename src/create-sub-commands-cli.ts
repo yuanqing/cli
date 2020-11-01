@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
-import { createCommandsHelp } from './help/create-commands-help'
 import { createHelp } from './help/create-help'
+import { createSubCommandsHelp } from './help/create-sub-commands-help'
 import { runCommand } from './run-command'
 import { CliConfig, CommandConfig } from './types'
 
-export function createCommandsCli(
+export function createSubCommandsCli(
   args: Array<string>,
   cliConfig: CliConfig,
-  commandConfigs: { [key: string]: CommandConfig }
+  subCommandConfigs: { [key: string]: CommandConfig }
 ): unknown {
   const firstArg = args[0]
   if (args.length === 1) {
@@ -17,28 +17,24 @@ export function createCommandsCli(
     }
     if (firstArg === '--help' || firstArg === '-h') {
       console.log(
-        createCommandsHelp(
+        createSubCommandsHelp(
           cliConfig.name,
           cliConfig.description,
-          commandConfigs,
+          subCommandConfigs,
           cliConfig.examples
         )
       )
       return
     }
   }
-  const commandConfig = commandConfigs[firstArg]
-  if (typeof commandConfig === 'undefined') {
+  const subCommandConfig = subCommandConfigs[firstArg]
+  if (typeof subCommandConfig === 'undefined') {
     throw new Error(`Unrecognized command: ${firstArg}`)
   }
   const secondArg = args[1]
   if (secondArg === '--help' || secondArg === '-h') {
-    console.log(createHelp(cliConfig.name, commandConfig))
+    console.log(createHelp(`${cliConfig.name} ${firstArg}`, subCommandConfig))
     return
   }
-  return runCommand(
-    args.slice(1),
-    `${cliConfig.name} ${firstArg}`,
-    commandConfig
-  )
+  return runCommand(args.slice(1), subCommandConfig)
 }

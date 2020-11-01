@@ -1,7 +1,7 @@
 import { CommandConfig } from '../types'
 import { stringifyExamples } from './utilities/stringify-examples'
 
-export function createCommandsHelp(
+export function createSubCommandsHelp(
   name: string,
   description: string,
   commandConfigs: { [key: string]: CommandConfig },

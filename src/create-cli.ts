@@ -19,5 +19,5 @@ export function createCli(
       return
     }
   }
-  return runCommand(args, cliConfig.name, commandConfig)
+  return runCommand(args, commandConfig)
 }

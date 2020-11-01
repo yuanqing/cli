@@ -4,7 +4,6 @@ import { CommandConfig } from './types'
 
 export function runCommand(
   args: Array<string>,
-  name: string,
   commandConfig: CommandConfig
 ): unknown {
   const { positionals, options, remainder } = parseArgs(
