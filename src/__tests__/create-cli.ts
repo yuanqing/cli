@@ -159,7 +159,9 @@ test('complex', function (t) {
     '--y',
     '42',
     '--z',
-    '-1'
+    '-1',
+    '--',
+    'bar'
   ]
   const positionals: Array<PositionalConfig> = [
     { name: 'a', type: 'boolean' },
@@ -194,7 +196,7 @@ test('complex', function (t) {
       y: 42,
       z: 'A'
     })
-    t.deepEqual(remainder, [])
+    t.deepEqual(remainder, ['bar'])
   }
   createCli(args, cliConfig, { handler, options, positionals })
 })
