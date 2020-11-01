@@ -25,7 +25,7 @@ export function createSubCommandsHelp(
   result.push('')
   if (typeof examples !== 'undefined' && examples.length !== 0) {
     result.push('  Examples:')
-    result.push(stringifyExamples(examples))
+    result.push(stringifyExamples(name, examples))
     result.push('')
   }
   return result.join('\n')

@@ -39,7 +39,7 @@ export function createHelp(name: string, commandConfig: CommandConfig): string {
     commandConfig.examples.length !== 0
   ) {
     result.push('  Examples:')
-    result.push(stringifyExamples(commandConfig.examples))
+    result.push(stringifyExamples(name, commandConfig.examples))
     result.push('')
   }
   return result.join('\n')
