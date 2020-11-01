@@ -114,7 +114,7 @@ test('with `args` - required', function (t) {
   createCli(args, cliConfig, { handler, positionals })
 })
 
-test('with `args` - string not in pre-set', function (t) {
+test('with `args` - string not in pre-defined set', function (t) {
   t.plan(1)
   const args: Array<string> = ['bar']
   const positionals: Array<PositionalConfig> = [

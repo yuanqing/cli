@@ -124,7 +124,7 @@ test('with `args` - flag without value', function (t) {
   }
 })
 
-test('with `args` - string not in pre-set', function (t) {
+test('with `args` - string not in pre-defined set', function (t) {
   t.plan(1)
   const args: Array<string> = ['--foo', 'bar']
   const options: Array<OptionConfig> = [{ name: 'foo', type: ['x', 'y'] }]

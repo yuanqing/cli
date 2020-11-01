@@ -141,7 +141,7 @@ test('with `args` - invalid number', function (t) {
   }
 })
 
-test('with `args` - number not in pre-set', function (t) {
+test('with `args` - number not in pre-defined set', function (t) {
   t.plan(1)
   const args: Array<string> = ['--foo', '1']
   const options: Array<OptionConfig> = [{ name: 'foo', type: [3.142, 42] }]
