@@ -33,5 +33,6 @@ export type Type =
   | 'boolean'
   | 'number'
   | 'string'
+  | Array<number>
   | Array<string>
   | ((value: string) => null | unknown)

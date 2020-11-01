@@ -68,11 +68,27 @@ export function parseArgs(
         }
         default: {
           if (Array.isArray(positionalConfig.type)) {
+            if (isNumberArray(positionalConfig.type)) {
+              const number = parseNumber(arg)
+              if (
+                number === null ||
+                positionalConfig.type.indexOf(number) === -1
+              ) {
+                throw new Error(
+                  `Positional <${positionalName}> must be one of ${stringifyValues<
+                    number
+                  >(positionalConfig.type)} but got '${arg}'`
+                )
+              }
+              positionals[positionalName] = number
+              positionalIndex++
+              continue
+            }
             if (positionalConfig.type.indexOf(arg) === -1) {
               throw new Error(
-                `Positional <${positionalName}> must be one of ${stringifyValues(
-                  positionalConfig.type
-                )} but got '${arg}'`
+                `Positional <${positionalName}> must be one of ${stringifyValues<
+                  string
+                >(positionalConfig.type)} but got '${arg}'`
               )
             }
             positionals[positionalName] = arg
@@ -137,14 +153,27 @@ export function parseArgs(
         if (Array.isArray(optionConfig.type)) {
           if (isNextArgValid === false) {
             throw new Error(
-              `Option ${arg} must be one of ${stringifyValues(
+              `Option ${arg} must be one of ${stringifyValues<number | string>(
                 optionConfig.type
               )}`
             )
           }
+          if (isNumberArray(optionConfig.type)) {
+            const number = parseNumber(nextArg)
+            if (number === null || optionConfig.type.indexOf(number) === -1) {
+              throw new Error(
+                `Option ${arg} must be one of ${stringifyValues<number>(
+                  optionConfig.type
+                )} but got '${nextArg}'`
+              )
+            }
+            options[optionName] = number
+            index++ // consume `nextArg`
+            continue
+          }
           if (optionConfig.type.indexOf(nextArg) === -1) {
             throw new Error(
-              `Option ${arg} must be one of ${stringifyValues(
+              `Option ${arg} must be one of ${stringifyValues<string>(
                 optionConfig.type
               )} but got '${nextArg}'`
             )
@@ -194,4 +223,15 @@ export function parseArgs(
     }
   }
   return { options, positionals, remainder }
+}
+
+function isNumberArray(
+  array: Array<number> | Array<string>
+): array is Array<number> {
+  for (const value of array) {
+    if (typeof value !== 'number') {
+      return false
+    }
+  }
+  return true
 }

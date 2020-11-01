@@ -1,5 +1,7 @@
-export function stringifyValues(values: Array<string>): string {
-  const quotedValues = values.map(function (value: string) {
+export function stringifyValues<T extends string | number>(
+  values: Array<T>
+): string {
+  const quotedValues: Array<string> = values.map(function (value: T) {
     return `'${value}'`
   })
   if (quotedValues.length === 1) {
