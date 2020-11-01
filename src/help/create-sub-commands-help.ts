@@ -12,13 +12,11 @@ export function createSubCommandsHelp(
   result.push(`  ${description}`)
   result.push('')
   result.push('  Usage:')
-  result.push(`    $ ${name} [command] [options]`)
+  result.push(`    $ ${name} <command> [options]`)
   result.push('')
-  if (Object.keys(commandConfigs).length > 0) {
-    result.push('  Commands:')
-    result.push(stringifyCommands(commandConfigs))
-    result.push('')
-  }
+  result.push('  Commands:')
+  result.push(stringifyCommands(commandConfigs))
+  result.push('')
   result.push('  Options:')
   result.push('    -h, --help  Print this message')
   result.push('    -v, --version  Print the version number')
