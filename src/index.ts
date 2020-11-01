@@ -1,2 +1,2 @@
 export * from './create-cli'
-export * from './create-sub-commands-cli'
+export * from './create-multi-command-cli'

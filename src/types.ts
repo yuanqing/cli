@@ -1,28 +1,31 @@
-export type CliConfig = {
+export interface CliConfig {
   name: string
   version: string
+}
+
+export interface MultiCommandCliConfig extends CliConfig {
   description: string
   examples?: Array<string>
 }
 
 export type CommandConfig = {
   description: string
-  positionals?: Array<PositionalConfig>
-  options?: Array<OptionConfig>
+  examples?: Array<string>
   handler: (
     positionals: { [key: string]: unknown },
     options: { [key: string]: unknown },
     remainder: Array<string>
   ) => unknown
-  examples?: Array<string>
+  options?: Array<OptionConfig>
+  positionals?: Array<PositionalConfig>
 }
 
 export interface PositionalConfig {
   name: string
-  description: string
-  type: Type
-  required?: boolean
   default?: unknown
+  description: string
+  required?: boolean
+  type: Type
 }
 
 export interface OptionConfig extends PositionalConfig {

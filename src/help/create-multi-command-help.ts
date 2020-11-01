@@ -1,10 +1,10 @@
 import { CommandConfig } from '../types'
 import { stringifyExamples } from './utilities/stringify-examples'
 
-export function createSubCommandsHelp(
+export function createMultiCommandHelp(
   name: string,
-  description: string,
   commandConfigs: { [key: string]: CommandConfig },
+  description: string,
   examples?: Array<string>
 ): string {
   const result = []
