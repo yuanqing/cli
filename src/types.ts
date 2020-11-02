@@ -31,7 +31,7 @@ export interface PositionalConfig {
 }
 
 export interface OptionConfig extends PositionalConfig {
-  shorthands?: Array<string>
+  aliases?: Array<string>
 }
 
 export type Type =
@@ -40,4 +40,4 @@ export type Type =
   | 'string'
   | Array<number>
   | Array<string>
-  | ((value: string) => null | unknown)
+  | ((value: string) => unknown)

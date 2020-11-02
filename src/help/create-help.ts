@@ -64,7 +64,7 @@ function stringifyPositionals(
 function stringifyOptions(optionConfigs: Array<OptionConfig>): string {
   const result = []
   for (const optionConfig of optionConfigs) {
-    const flags = stringifyFlags(optionConfig.name, optionConfig.shorthands)
+    const flags = stringifyFlags(optionConfig.name, optionConfig.aliases)
     const line = [`    ${flags}`]
     if (typeof optionConfig.description !== 'undefined') {
       line.push(optionConfig.description)
