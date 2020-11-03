@@ -17,7 +17,8 @@
   },
   "main": "lib/index.js",
   "files": [
-    "lib"
+    "lib",
+    "!lib/**/__tests__/**/*"
   ],
   "scripts": {
     "build": "yarn run clean && tsc",
