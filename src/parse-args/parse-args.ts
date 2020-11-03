@@ -34,7 +34,7 @@ export function parseArgs(
         typeof positionalConfigs === 'undefined' ||
         positionalIndex >= positionalConfigs.length
       ) {
-        if (isArgFlag === true) {
+        if (isArgFlag === true && stopParsingOptions === false) {
           throw new Error(`Invalid option: ${arg}`)
         }
         if (arg !== stopParsingOptionsArg) {

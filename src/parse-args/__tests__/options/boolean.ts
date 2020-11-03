@@ -45,7 +45,7 @@ test('required', function (t) {
 
 test('true', function (t) {
   t.plan(1)
-  const args: Array<string> = ['true']
+  const args = ['true']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   const result = parseArgs(args, undefined, optionConfigs)
   t.deepEqual(result, {
@@ -57,7 +57,7 @@ test('true', function (t) {
 
 test('false', function (t) {
   t.plan(1)
-  const args: Array<string> = ['false']
+  const args = ['false']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   const result = parseArgs(args, undefined, optionConfigs)
   t.deepEqual(result, {
@@ -69,7 +69,7 @@ test('false', function (t) {
 
 test('number', function (t) {
   t.plan(1)
-  const args: Array<string> = ['42']
+  const args = ['42']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   const result = parseArgs(args, undefined, optionConfigs)
   t.deepEqual(result, {
@@ -81,7 +81,7 @@ test('number', function (t) {
 
 test('negative number', function (t) {
   t.plan(1)
-  const args: Array<string> = ['-7']
+  const args = ['-7']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   try {
     parseArgs(args, undefined, optionConfigs)
@@ -93,7 +93,7 @@ test('negative number', function (t) {
 
 test('string', function (t) {
   t.plan(1)
-  const args: Array<string> = ['bar']
+  const args = ['bar']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   const result = parseArgs(args, undefined, optionConfigs)
   t.deepEqual(result, {
@@ -105,7 +105,7 @@ test('string', function (t) {
 
 test('string with dash', function (t) {
   t.plan(1)
-  const args: Array<string> = ['-z']
+  const args = ['-z']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   try {
     parseArgs(args, undefined, optionConfigs)
@@ -117,7 +117,7 @@ test('string with dash', function (t) {
 
 test('double dash', function (t) {
   t.plan(1)
-  const args: Array<string> = ['--']
+  const args = ['--']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   const result = parseArgs(args, undefined, optionConfigs)
   t.deepEqual(result, {
@@ -129,7 +129,7 @@ test('double dash', function (t) {
 
 test('flag', function (t) {
   t.plan(1)
-  const args: Array<string> = ['--foo']
+  const args = ['--foo']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   const result = parseArgs(args, undefined, optionConfigs)
   t.deepEqual(result, {
@@ -141,7 +141,7 @@ test('flag', function (t) {
 
 test('flag, true', function (t) {
   t.plan(1)
-  const args: Array<string> = ['--foo', 'true']
+  const args = ['--foo', 'true']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   const result = parseArgs(args, undefined, optionConfigs)
   t.deepEqual(result, {
@@ -153,7 +153,7 @@ test('flag, true', function (t) {
 
 test('flag, false', function (t) {
   t.plan(1)
-  const args: Array<string> = ['--foo', 'false']
+  const args = ['--foo', 'false']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   const result = parseArgs(args, undefined, optionConfigs)
   t.deepEqual(result, {
@@ -165,7 +165,7 @@ test('flag, false', function (t) {
 
 test('flag, number', function (t) {
   t.plan(1)
-  const args: Array<string> = ['--foo', '42']
+  const args = ['--foo', '42']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   const result = parseArgs(args, undefined, optionConfigs)
   t.deepEqual(result, {
@@ -177,7 +177,7 @@ test('flag, number', function (t) {
 
 test('flag, negative number', function (t) {
   t.plan(1)
-  const args: Array<string> = ['--foo', '-7']
+  const args = ['--foo', '-7']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   try {
     parseArgs(args, undefined, optionConfigs)
@@ -189,7 +189,7 @@ test('flag, negative number', function (t) {
 
 test('flag, string', function (t) {
   t.plan(1)
-  const args: Array<string> = ['--foo', 'bar']
+  const args = ['--foo', 'bar']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   const result = parseArgs(args, undefined, optionConfigs)
   t.deepEqual(result, {
@@ -201,7 +201,7 @@ test('flag, string', function (t) {
 
 test('flag, string with dash', function (t) {
   t.plan(1)
-  const args: Array<string> = ['--foo', '-z']
+  const args = ['--foo', '-z']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   try {
     parseArgs(args, undefined, optionConfigs)
@@ -213,7 +213,7 @@ test('flag, string with dash', function (t) {
 
 test('flag, double dash', function (t) {
   t.plan(1)
-  const args: Array<string> = ['--foo', '--']
+  const args = ['--foo', '--']
   const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
   const result = parseArgs(args, undefined, optionConfigs)
   t.deepEqual(result, {
