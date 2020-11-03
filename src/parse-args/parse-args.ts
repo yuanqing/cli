@@ -125,8 +125,11 @@ export function parseArgs(
             positionalIndex++
             continue
           } catch (error) {
+            if (parseFlag(arg) !== null) {
+              throw new Error(`Invalid option: ${arg}`)
+            }
             throw new Error(
-              `Invalid argument <${positionalName}>: ${error.message}`
+              `Invalid value for argument <${positionalName}>: '${arg}'`
             )
           }
         }
@@ -223,7 +226,10 @@ export function parseArgs(
           index++ // consume `nextArg`
           continue
         }
-        if (typeof nextArg === 'undefined') {
+        if (
+          typeof nextArg === 'undefined' ||
+          nextArg === stopParsingOptionsArg
+        ) {
           throw new Error(`Option ${arg} expects a value`)
         }
         try {
@@ -231,7 +237,10 @@ export function parseArgs(
           options[optionConfig.name] = value
           index++ // consume `nextArg`
         } catch (error) {
-          throw new Error(`Invalid option ${arg}: ${error.message}`)
+          if (parseFlag(nextArg) !== null) {
+            throw new Error(`Invalid option: ${nextArg}`)
+          }
+          throw new Error(`Invalid value for option ${arg}: '${nextArg}'`)
         }
       }
     }
