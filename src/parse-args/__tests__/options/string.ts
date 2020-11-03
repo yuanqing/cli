@@ -135,7 +135,7 @@ test('flag', function (t) {
     parseArgs(args, undefined, optionConfigs)
     t.fail()
   } catch (error) {
-    t.equal(error.message, 'Option --foo must be a string')
+    t.equal(error.message, 'Option --foo expects a value')
   }
 })
 
@@ -183,7 +183,7 @@ test('flag, negative number', function (t) {
     parseArgs(args, undefined, optionConfigs)
     t.fail()
   } catch (error) {
-    t.equal(error.message, 'Option --foo must be a string')
+    t.equal(error.message, 'Option --foo expects a value')
   }
 })
 
@@ -207,7 +207,7 @@ test('flag, string with dash', function (t) {
     parseArgs(args, undefined, optionConfigs)
     t.fail()
   } catch (error) {
-    t.equal(error.message, 'Option --foo must be a string')
+    t.equal(error.message, 'Option --foo expects a value')
   }
 })
 
@@ -219,6 +219,6 @@ test('flag, double dash', function (t) {
     parseArgs(args, undefined, optionConfigs)
     t.fail()
   } catch (error) {
-    t.equal(error.message, 'Option --foo must be a string')
+    t.equal(error.message, 'Option --foo expects a value')
   }
 })

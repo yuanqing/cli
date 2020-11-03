@@ -29,11 +29,12 @@ export function parseArgs(
     }
     const optionConfig = findOptionConfig(arg, optionConfigs)
     if (stopParsingOptions === true || optionConfig === null) {
+      const isArgFlag = parseFlag(arg) !== null
       if (
         typeof positionalConfigs === 'undefined' ||
         positionalIndex >= positionalConfigs.length
       ) {
-        if (parseFlag(arg) !== null) {
+        if (isArgFlag === true) {
           throw new Error(`Invalid option: ${arg}`)
         }
         if (arg !== stopParsingOptionsArg) {
@@ -55,7 +56,7 @@ export function parseArgs(
             positionalIndex++
             continue
           }
-          if (parseFlag(arg) !== null) {
+          if (isArgFlag === true) {
             throw new Error(`Invalid option: ${arg}`)
           }
           throw new Error(
@@ -65,7 +66,7 @@ export function parseArgs(
         case 'number': {
           const number = parseNumber(arg)
           if (number === null) {
-            if (parseFlag(arg) !== null) {
+            if (isArgFlag === true) {
               throw new Error(`Invalid option: ${arg}`)
             }
             throw new Error(
@@ -77,7 +78,7 @@ export function parseArgs(
           continue
         }
         case 'string': {
-          if (parseFlag(arg) !== null) {
+          if (isArgFlag === true) {
             throw new Error(`Invalid option: ${arg}`)
           }
           positionals[positionalName] = arg
@@ -87,12 +88,13 @@ export function parseArgs(
         default: {
           if (Array.isArray(positionalConfig.type)) {
             if (isNumberArray(positionalConfig.type)) {
+              // `positionalConfig.type` is Array<number>
               const number = parseNumber(arg)
               if (
                 number === null ||
                 positionalConfig.type.indexOf(number) === -1
               ) {
-                if (parseFlag(arg) !== null) {
+                if (isArgFlag === true) {
                   throw new Error(`Invalid option: ${arg}`)
                 }
                 throw new Error(
@@ -105,8 +107,9 @@ export function parseArgs(
               positionalIndex++
               continue
             }
+            // `positionalConfig.type` is Array<string>
             if (positionalConfig.type.indexOf(arg) === -1) {
-              if (parseFlag(arg) !== null) {
+              if (isArgFlag === true) {
                 throw new Error(`Invalid option: ${arg}`)
               }
               throw new Error(
@@ -119,39 +122,45 @@ export function parseArgs(
             positionalIndex++
             continue
           }
+          // `positionalConfig.type` is a function
           try {
             const value = positionalConfig.type(arg)
             positionals[positionalName] = value
             positionalIndex++
             continue
           } catch (error) {
-            if (parseFlag(arg) !== null) {
+            if (isArgFlag === true) {
               throw new Error(`Invalid option: ${arg}`)
             }
-            throw new Error(
-              `Invalid value for argument <${positionalName}>: '${arg}'`
-            )
+            if (error.message === '') {
+              throw new Error(
+                `Invalid value for argument <${positionalName}>: '${arg}'`
+              )
+            }
+            throw error
           }
         }
       }
-    }
-    if (arg === stopParsingOptionsArg) {
-      stopParsingOptions = true
-      continue
     }
     if (typeof options[optionConfig.name] !== 'undefined') {
       throw new Error(`Duplicate option: ${arg}`)
     }
     const nextArg: undefined | string = args[index + 1]
+    const isNextArgUndefined = typeof nextArg === 'undefined'
+    const isNextArgFlag =
+      parseFlag(nextArg) !== null || nextArg === stopParsingOptionsArg
     switch (optionConfig.type) {
       case 'boolean': {
         options[optionConfig.name] = true
         continue
       }
       case 'number': {
+        if (isNextArgUndefined === true) {
+          throw new Error(`Option ${arg} must be a number`)
+        }
         const number = parseNumber(nextArg)
         if (number === null) {
-          if (typeof nextArg === 'undefined' || parseFlag(nextArg) !== null) {
+          if (isNextArgFlag === true) {
             throw new Error(`Option ${arg} must be a number`)
           }
           throw new Error(`Option ${arg} must be a number but got '${nextArg}'`)
@@ -161,8 +170,8 @@ export function parseArgs(
         continue
       }
       case 'string': {
-        if (typeof nextArg === 'undefined' || parseFlag(nextArg) !== null) {
-          throw new Error(`Option ${arg} must be a string`)
+        if (isNextArgUndefined === true || isNextArgFlag === true) {
+          throw new Error(`Option ${arg} expects a value`)
         }
         options[optionConfig.name] = nextArg
         index++ // consume `nextArg`
@@ -170,15 +179,18 @@ export function parseArgs(
       }
       default: {
         if (Array.isArray(optionConfig.type)) {
+          if (isNextArgUndefined === true) {
+            throw new Error(
+              `Option ${arg} must be one of ${stringifyValues<number | string>(
+                optionConfig.type
+              )}`
+            )
+          }
           if (isNumberArray(optionConfig.type)) {
             // `optionConfig.type` is Array<number>
             const number = parseNumber(nextArg)
             if (number === null || optionConfig.type.indexOf(number) === -1) {
-              if (
-                typeof nextArg === 'undefined' ||
-                findOptionConfig(nextArg, optionConfigs) !== null ||
-                parseFlag(nextArg) !== null
-              ) {
+              if (isNextArgFlag === true) {
                 throw new Error(
                   `Option ${arg} must be one of ${stringifyValues<number>(
                     optionConfig.type
@@ -196,18 +208,8 @@ export function parseArgs(
             continue
           }
           // `optionConfig.type` is Array<string>
-          if (typeof nextArg === 'undefined') {
-            throw new Error(
-              `Option ${arg} must be one of ${stringifyValues<string>(
-                optionConfig.type
-              )}`
-            )
-          }
           if (optionConfig.type.indexOf(nextArg) === -1) {
-            if (
-              findOptionConfig(nextArg, optionConfigs) !== null ||
-              parseFlag(nextArg) !== null
-            ) {
+            if (isNextArgFlag === true) {
               // `nextArg` is a valid option flag
               throw new Error(
                 `Option ${arg} must be one of ${stringifyValues<string>(
@@ -226,18 +228,17 @@ export function parseArgs(
           index++ // consume `nextArg`
           continue
         }
-        if (
-          typeof nextArg === 'undefined' ||
-          nextArg === stopParsingOptionsArg
-        ) {
+        // `optionConfig.type` is a function
+        if (isNextArgUndefined === true || nextArg === stopParsingOptionsArg) {
           throw new Error(`Option ${arg} expects a value`)
         }
         try {
           const value = optionConfig.type(nextArg)
           options[optionConfig.name] = value
           index++ // consume `nextArg`
+          continue
         } catch (error) {
-          if (parseFlag(nextArg) !== null) {
+          if (isNextArgFlag === true) {
             throw new Error(`Invalid option: ${nextArg}`)
           }
           throw new Error(`Invalid value for option ${arg}: '${nextArg}'`)
