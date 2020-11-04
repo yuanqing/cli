@@ -13,45 +13,7 @@ function parseCustomType(value: string): string {
   throw new Error()
 }
 
-test('duplicate option', function (t) {
-  t.plan(1)
-  const args = ['--foo', '--foo']
-  const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
-  try {
-    parseArgs(args, undefined, optionConfigs)
-    t.fail()
-  } catch (error) {
-    t.equal(error.message, 'Duplicate option: --foo')
-  }
-})
-
-test('stop parsing options after `--`', function (t) {
-  t.plan(1)
-  const args = ['--foo', '--', '--foo', '--bar']
-  const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
-  const result = parseArgs(args, undefined, optionConfigs)
-  t.deepEqual(result, {
-    options: { foo: true },
-    positionals: {},
-    remainder: ['--foo', '--bar']
-  })
-})
-
-test('option alias', function (t) {
-  t.plan(1)
-  const args = ['-f']
-  const optionConfigs: Array<OptionConfig> = [
-    { aliases: ['f'], name: 'foo', type: 'boolean' }
-  ]
-  const result = parseArgs(args, undefined, optionConfigs)
-  t.deepEqual(result, {
-    options: { foo: true },
-    positionals: {},
-    remainder: []
-  })
-})
-
-test('multiple positionals', function (t) {
+test('positionals', function (t) {
   t.plan(1)
   const args = ['true', '42', 'bar', '-7', 'bar', '-7']
   const positionalConfigs: Array<PositionalConfig> = [
@@ -70,7 +32,7 @@ test('multiple positionals', function (t) {
   })
 })
 
-test('multiple options', function (t) {
+test('options', function (t) {
   t.plan(1)
   const args = [
     '--u',
@@ -101,7 +63,45 @@ test('multiple options', function (t) {
   })
 })
 
-test('multiple positionals and options', function (t) {
+test('options, alias', function (t) {
+  t.plan(1)
+  const args = ['-f']
+  const optionConfigs: Array<OptionConfig> = [
+    { aliases: ['f'], name: 'foo', type: 'boolean' }
+  ]
+  const result = parseArgs(args, undefined, optionConfigs)
+  t.deepEqual(result, {
+    options: { foo: true }, // key will be `name`, not the alias
+    positionals: {},
+    remainder: []
+  })
+})
+
+test('options, duplicate', function (t) {
+  t.plan(1)
+  const args = ['--foo', '--foo']
+  const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
+  try {
+    parseArgs(args, undefined, optionConfigs)
+    t.fail()
+  } catch (error) {
+    t.equal(error.message, 'Duplicate option: --foo')
+  }
+})
+
+test('remainder args', function (t) {
+  t.plan(1)
+  const args = ['--foo', '--', '--beep', 'boop']
+  const optionConfigs: Array<OptionConfig> = [{ name: 'foo', type: 'boolean' }]
+  const result = parseArgs(args, undefined, optionConfigs)
+  t.deepEqual(result, {
+    options: { foo: true },
+    positionals: {},
+    remainder: ['--beep', 'boop']
+  })
+})
+
+test('complex', function (t) {
   t.plan(1)
   const args = [
     'true',
@@ -120,7 +120,10 @@ test('multiple positionals and options', function (t) {
     '--y',
     'bar',
     '--z',
-    '-7'
+    '-7',
+    '--',
+    '--beep',
+    'boop'
   ]
   const positionalConfigs: Array<PositionalConfig> = [
     { name: 'a', type: 'boolean' },
@@ -142,6 +145,6 @@ test('multiple positionals and options', function (t) {
   t.deepEqual(result, {
     options: { u: true, v: 42, w: 'bar', x: -7, y: 'bar', z: 'x' },
     positionals: { a: true, b: 42, c: 'bar', d: -7, e: 'bar', f: 'x' },
-    remainder: []
+    remainder: ['--beep', 'boop']
   })
 })

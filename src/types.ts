@@ -9,11 +9,11 @@ export interface MultiCommandCliConfig extends CliConfig {
 }
 
 export type CommandConfig = {
+  handler: CommandHandler
   description?: string
   examples?: Array<string>
-  handler: CommandHandler
-  options?: Array<OptionConfig>
   positionals?: Array<PositionalConfig>
+  options?: Array<OptionConfig>
 }
 
 export type CommandHandler = (
@@ -24,10 +24,10 @@ export type CommandHandler = (
 
 export interface PositionalConfig {
   name: string
-  default?: unknown
-  description?: string
-  required?: boolean
   type: Type
+  description?: string
+  default?: unknown
+  required?: boolean
 }
 
 export interface OptionConfig extends PositionalConfig {
