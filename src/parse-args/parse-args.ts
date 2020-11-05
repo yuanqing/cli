@@ -46,12 +46,12 @@ export function parseArgs(
       const positionalName = positionalConfig.name
       switch (positionalConfig.type) {
         case 'boolean': {
-          if (arg === 'true') {
+          if (arg === 'true' || arg === '1') {
             positionals[positionalName] = true
             positionalIndex++
             continue
           }
-          if (arg === 'false') {
+          if (arg === 'false' || arg === '0') {
             positionals[positionalName] = false
             positionalIndex++
             continue
@@ -152,6 +152,15 @@ export function parseArgs(
     switch (optionConfig.type) {
       case 'boolean': {
         options[optionConfig.name] = true
+        if (nextArg === 'true' || nextArg === '1') {
+          index++ // consume `nextArg`
+          continue
+        }
+        if (nextArg === 'false' || nextArg === '0') {
+          options[optionConfig.name] = false
+          index++ // consume `nextArg`
+          continue
+        }
         continue
       }
       case 'number': {
@@ -239,7 +248,7 @@ export function parseArgs(
           continue
         } catch (error) {
           if (isNextArgFlag === true) {
-            throw new Error(`Invalid option: ${nextArg}`)
+            throw new Error(`Option ${arg} expects a value`)
           }
           throw new Error(`Invalid value for option ${arg}: '${nextArg}'`)
         }

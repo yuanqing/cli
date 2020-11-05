@@ -18,6 +18,7 @@
   "main": "lib/index.js",
   "files": [
     "lib",
+    "!lib/**/__fixtures__/**/*",
     "!lib/**/__tests__/**/*"
   ],
   "scripts": {
