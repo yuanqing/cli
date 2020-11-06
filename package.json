@@ -17,9 +17,7 @@
   },
   "main": "lib/index.js",
   "files": [
-    "lib",
-    "!lib/**/__fixtures__/**/*",
-    "!lib/**/__tests__/**/*"
+    "lib"
   ],
   "scripts": {
     "build": "yarn run clean && tsc",
