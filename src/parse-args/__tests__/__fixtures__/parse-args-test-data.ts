@@ -602,5 +602,13 @@ export const parseArgsTestData = [
       [['--bar', '42', '--', '--bar'], { foo: 42 }, { bar: true }, ['--bar']],
       [['--bar', '42', '--bar', '--'], 'Duplicate option: --bar']
     ]
+  },
+  {
+    name: 'equals',
+    optionConfigs: [{ name: 'foo', type: 'number' }],
+    tests: [
+      [['--foo'], 'Option --foo must be a number'],
+      [['--foo=42'], {}, { foo: 42 }, []]
+    ]
   }
 ]

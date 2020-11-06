@@ -1,5 +1,4 @@
 import { OptionConfig } from '../../types'
-import { parseFlag } from './parse-flag'
 
 export function findOptionConfig(
   arg: string,
@@ -8,15 +7,11 @@ export function findOptionConfig(
   if (typeof optionConfigs === 'undefined') {
     return null
   }
-  const flag = parseFlag(arg)
-  if (flag === null) {
-    return null
-  }
   for (const optionConfig of optionConfigs) {
     if (
-      optionConfig.name === flag ||
+      optionConfig.name === arg ||
       (typeof optionConfig.aliases !== 'undefined' &&
-        optionConfig.aliases.indexOf(flag) !== -1)
+        optionConfig.aliases.indexOf(arg) !== -1)
     ) {
       return optionConfig
     }
