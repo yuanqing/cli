@@ -37,13 +37,13 @@ export function parseArgs(
         if (isArgFlag === true && stopParsingOptions === false) {
           throw new Error(`Invalid option: ${arg}`)
         }
-        if (arg !== stopParsingOptionsArg) {
-          remainder.push(arg)
-        }
+        remainder.push(arg)
         continue
       }
       const positionalConfig = positionalConfigs[positionalIndex]
       const positionalName = positionalConfig.name
+      const isArgInvalidOption =
+        isArgFlag === true && stopParsingOptions === false
       switch (positionalConfig.type) {
         case 'boolean': {
           if (arg === 'true' || arg === '1') {
@@ -56,7 +56,7 @@ export function parseArgs(
             positionalIndex++
             continue
           }
-          if (isArgFlag === true) {
+          if (isArgInvalidOption === true) {
             throw new Error(`Invalid option: ${arg}`)
           }
           throw new Error(
@@ -66,7 +66,7 @@ export function parseArgs(
         case 'number': {
           const number = parseNumber(arg)
           if (number === null) {
-            if (isArgFlag === true) {
+            if (isArgInvalidOption === true) {
               throw new Error(`Invalid option: ${arg}`)
             }
             throw new Error(
@@ -78,7 +78,7 @@ export function parseArgs(
           continue
         }
         case 'string': {
-          if (isArgFlag === true) {
+          if (isArgInvalidOption === true) {
             throw new Error(`Invalid option: ${arg}`)
           }
           positionals[positionalName] = arg
@@ -94,7 +94,7 @@ export function parseArgs(
                 number === null ||
                 positionalConfig.type.indexOf(number) === -1
               ) {
-                if (isArgFlag === true) {
+                if (isArgInvalidOption === true) {
                   throw new Error(`Invalid option: ${arg}`)
                 }
                 throw new Error(
@@ -109,7 +109,7 @@ export function parseArgs(
             }
             // `positionalConfig.type` is Array<string>
             if (positionalConfig.type.indexOf(arg) === -1) {
-              if (isArgFlag === true) {
+              if (isArgInvalidOption === true) {
                 throw new Error(`Invalid option: ${arg}`)
               }
               throw new Error(
@@ -129,7 +129,7 @@ export function parseArgs(
             positionalIndex++
             continue
           } catch (error) {
-            if (isArgFlag === true) {
+            if (isArgInvalidOption === true) {
               throw new Error(`Invalid option: ${arg}`)
             }
             if (error.message === '') {
