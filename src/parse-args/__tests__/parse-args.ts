@@ -1,8 +1,8 @@
 import { test } from 'tap'
 
+import { parseArgsTestData } from '../__fixtures__/parse-args-test-data'
 import { OptionConfig, PositionalConfig } from '../../types'
 import { parseArgs } from '../parse-args'
-import { parseArgsTestData } from './__fixtures__/parse-args-test-data'
 
 for (const {
   name,
