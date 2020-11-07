@@ -1,25 +1,25 @@
-const flagRegex = /-{1,2}(.+)/
+const optionFlagRegex = /--?([^-].*)/
 
-export function parseOption(
+export function parseOptionFlag(
   arg?: string
-): null | { optionName: string; value: null | string } {
+): null | { name: string; value: null | string } {
   if (typeof arg === 'undefined') {
     return null
   }
-  const matches = arg.match(flagRegex)
+  const matches = arg.match(optionFlagRegex)
   if (arg === '--' || matches === null) {
     return null
   }
   const equalsIndex = matches[1].indexOf('=')
   if (equalsIndex === -1) {
     return {
-      optionName: matches[1],
+      name: matches[1],
       value: null
     }
   }
   const value = matches[1].slice(equalsIndex + 1)
   return {
-    optionName: matches[1].slice(0, equalsIndex),
+    name: matches[1].slice(0, equalsIndex),
     value: value.length === 0 ? null : value
   }
 }

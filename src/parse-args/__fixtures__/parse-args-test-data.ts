@@ -136,21 +136,21 @@ export const parseArgsTestData = [
       [['-baz'], 'Invalid option: -baz'],
       [['--qux'], 'Invalid option: --qux'],
       [['--'], {}, {}, []],
-      [['--foo'], 'Option --foo expects a value'],
+      [['--foo'], 'Option --foo must be a string'],
       [['--foo', 'false'], {}, { foo: 'false' }, []],
       [['--foo', 'true'], {}, { foo: 'true' }, []],
       [['--foo', '0'], {}, { foo: '0' }, []],
       [['--foo', '1'], {}, { foo: '1' }, []],
       [['--foo', '42'], {}, { foo: '42' }, []],
-      [['--foo', '-7'], 'Option --foo expects a value'],
+      [['--foo', '-7'], 'Option --foo must be a string'],
       [['--foo', '.5'], {}, { foo: '.5' }, []],
-      [['--foo', '-.5'], 'Option --foo expects a value'],
+      [['--foo', '-.5'], 'Option --foo must be a string'],
       [['--foo', '3.142'], {}, { foo: '3.142' }, []],
-      [['--foo', '-3.142'], 'Option --foo expects a value'],
+      [['--foo', '-3.142'], 'Option --foo must be a string'],
       [['--foo', 'bar'], {}, { foo: 'bar' }, []],
-      [['--foo', '-baz'], 'Option --foo expects a value'],
-      [['--foo', '--qux'], 'Option --foo expects a value'],
-      [['--foo', '--'], 'Option --foo expects a value']
+      [['--foo', '-baz'], 'Option --foo must be a string'],
+      [['--foo', '--qux'], 'Option --foo must be a string'],
+      [['--foo', '--'], 'Option --foo must be a string']
     ]
   },
   {
@@ -345,18 +345,24 @@ export const parseArgsTestData = [
       [['true'], { foo: true }, {}, []],
       [['0'], { foo: false }, {}, []],
       [['1'], { foo: true }, {}, []],
-      [['42'], "Argument <foo> must be one of 'true' or 'false' but got '42'"],
+      [
+        ['42'],
+        "Argument <foo> must be one of '0', '1', 'false', or 'true' but got '42'"
+      ],
       [['-7'], 'Invalid option: -7'],
-      [['.5'], "Argument <foo> must be one of 'true' or 'false' but got '.5'"],
+      [
+        ['.5'],
+        "Argument <foo> must be one of '0', '1', 'false', or 'true' but got '.5'"
+      ],
       [['-.5'], 'Invalid option: -.5'],
       [
         ['3.142'],
-        "Argument <foo> must be one of 'true' or 'false' but got '3.142'"
+        "Argument <foo> must be one of '0', '1', 'false', or 'true' but got '3.142'"
       ],
       [['-3.142'], 'Invalid option: -3.142'],
       [
         ['bar'],
-        "Argument <foo> must be one of 'true' or 'false' but got 'bar'"
+        "Argument <foo> must be one of '0', '1', 'false', or 'true' but got 'bar'"
       ],
       [['-baz'], 'Invalid option: -baz'],
       [['--qux'], 'Invalid option: --qux'],

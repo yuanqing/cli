@@ -35,6 +35,7 @@ export function createHelp(name: string, commandConfig: CommandConfig): string {
     result.push(stringifyOptions(commandConfig.options))
   }
   result.push('    -h, --help  Print this message')
+  result.push('    -v, --version  Print the version')
   result.push('')
   if (
     typeof commandConfig.examples !== 'undefined' &&
