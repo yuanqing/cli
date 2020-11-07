@@ -5,7 +5,7 @@ import { mapArgTypeToValueParser } from './map-arg-type-to-value-parser'
 import { parseOptionFlag } from './parse-option-flag'
 import { parseBoolean } from './parse-value/parse-boolean'
 
-const stopParsingOptionsArg = '--'
+const stopParsingOptionsArg = '--' // stop parsing options when we see this
 
 export function parseArgs(
   args: Array<string>,
@@ -16,13 +16,13 @@ export function parseArgs(
   options: { [key: string]: unknown }
   remainder: Array<string>
 } {
-  const argsCopy = args.slice()
   const positionals: { [key: string]: unknown } = {}
   const options: { [key: string]: unknown } = {}
   const remainder: Array<string> = []
+  let stopParsingOptions = false
   let positionalIndex = 0
   let index = -1
-  let stopParsingOptions = false
+  const argsCopy = args.slice()
   while (++index < argsCopy.length) {
     const arg = argsCopy[index]
     if (stopParsingOptions === false && arg === stopParsingOptionsArg) {
@@ -34,7 +34,7 @@ export function parseArgs(
     if (option !== null) {
       optionConfig = findOptionConfig(option.name, optionConfigs)
       if (option.value !== null) {
-        // Insert `value` after `index`
+        // insert `value` _after_ `argCopy[index]`
         argsCopy.splice(index + 1, 0, option.value)
       }
     }
