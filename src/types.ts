@@ -38,10 +38,10 @@ export type ArgType =
   | 'boolean'
   | 'number'
   | 'positive number'
-  | 'positive non-zero number'
+  | 'non-zero positive number'
   | 'integer'
   | 'positive integer'
-  | 'positive non-zero integer'
+  | 'non-zero positive integer'
   | 'string'
   | Array<boolean | number | string | null>
   | ((arg: string, name: string) => unknown)

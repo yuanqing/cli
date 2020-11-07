@@ -20,16 +20,13 @@ export function mapArgTypeToValueParser(
       case 'boolean': {
         return parseBoolean
       }
-      case 'string': {
-        return parseString
-      }
       case 'number': {
         return parseNumber
       }
       case 'positive number': {
         return parseNumberPositive
       }
-      case 'positive non-zero number': {
+      case 'non-zero positive number': {
         return parseNumberPositiveNonZero
       }
       case 'integer': {
@@ -38,8 +35,11 @@ export function mapArgTypeToValueParser(
       case 'positive integer': {
         return parseIntegerPositive
       }
-      case 'positive non-zero integer': {
+      case 'non-zero positive integer': {
         return parseIntegerPositiveNonZero
+      }
+      case 'string': {
+        return parseString
       }
     }
   }
