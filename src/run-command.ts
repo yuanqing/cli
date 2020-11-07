@@ -9,7 +9,8 @@ export function runCommand(
   const { positionals, options, remainder } = parseArgs(
     args,
     commandConfig.positionals,
-    commandConfig.options
+    commandConfig.options,
+    commandConfig.shorthands
   )
   return commandConfig.handler(positionals, options, remainder)
 }

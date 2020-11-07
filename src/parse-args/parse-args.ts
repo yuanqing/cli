@@ -4,19 +4,24 @@ import { findOptionConfig } from './find-option-config'
 import { mapArgTypeToValueParser } from './map-arg-type-to-value-parser'
 import { parseOptionFlag } from './parse-option-flag'
 import { parseBoolean } from './parse-value/parse-boolean'
+import { sortObjectByKey } from './sort-object-by-key'
 
 const stopParsingOptionsArg = '--' // stop parsing options when we see this
 
 export function parseArgs(
   args: Array<string>,
   positionalConfigs?: Array<PositionalConfig>,
-  optionConfigs?: Array<OptionConfig>
+  optionConfigs?: Array<OptionConfig>,
+  shorthands?: { [key: string]: Array<string> }
 ): {
   positionals: { [key: string]: unknown }
   options: { [key: string]: unknown }
   remainder: Array<string>
 } {
-  const argsCopy = args.slice()
+  const argsCopy =
+    typeof shorthands === 'undefined'
+      ? args.slice()
+      : insertShorthands(args, shorthands)
   const positionals: { [key: string]: unknown } = {}
   const options: { [key: string]: unknown } = {}
   const remainder: Array<string> = []
@@ -156,5 +161,36 @@ export function parseArgs(
       }
     }
   }
-  return { options, positionals, remainder }
+  return {
+    options: sortObjectByKey(options),
+    positionals: sortObjectByKey(positionals),
+    remainder
+  }
+}
+
+function insertShorthands(
+  args: Array<string>,
+  shorthands: { [key: string]: Array<string> }
+): Array<string> {
+  const result: Array<string> = []
+  let stopParsingOptions = false
+  for (const arg of args) {
+    if (arg === stopParsingOptionsArg) {
+      // stop inserting shorthand args when we encounter `stopParsingOptionsArg`
+      stopParsingOptions = true
+    }
+    if (stopParsingOptions === true) {
+      result.push(arg)
+      continue
+    }
+    const option = parseOptionFlag(arg)
+    if (option === null || typeof shorthands[option.name] === 'undefined') {
+      result.push(arg)
+      continue
+    }
+    for (const shorthandArg of shorthands[option.name]) {
+      result.push(shorthandArg)
+    }
+  }
+  return result
 }

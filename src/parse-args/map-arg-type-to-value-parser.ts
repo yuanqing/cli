@@ -41,6 +41,9 @@ export function mapArgTypeToValueParser(
       case 'string': {
         return parseString
       }
+      default: {
+        throw new Error('Invalid type')
+      }
     }
   }
   return createEnumParser(type)

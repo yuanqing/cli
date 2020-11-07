@@ -14,6 +14,7 @@ export type CommandConfig = {
   examples?: Array<string>
   positionals?: Array<PositionalConfig>
   options?: Array<OptionConfig>
+  shorthands?: { [key: string]: Array<string> }
 }
 
 export type CommandHandler = (
@@ -35,13 +36,6 @@ export interface OptionConfig extends PositionalConfig {
 }
 
 export type ArgType =
-  | 'boolean'
-  | 'number'
-  | 'positive number'
-  | 'non-zero positive number'
-  | 'integer'
-  | 'positive integer'
-  | 'non-zero positive integer'
-  | 'string'
+  | string
   | Array<boolean | number | string | null>
   | ((arg: string, name: string) => unknown)
