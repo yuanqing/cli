@@ -43,12 +43,12 @@ export function parseArgs(
             throw new Error(`Duplicate option: ${arg}`)
           }
           const nextArg = argsCopy[index + 1]
+          const nextArgOption = parseOptionFlag(nextArg)
           const isNextArgUndefined =
             typeof nextArg === 'undefined' || nextArg === stopParsingOptionsArg
-          const isNextArgOptionFlag = parseOptionFlag(nextArg) !== null
           if (optionConfig.type === 'boolean') {
             options[optionConfig.name] = true
-            if (isNextArgUndefined === false && isNextArgOptionFlag === false) {
+            if (isNextArgUndefined === false && nextArgOption === null) {
               try {
                 const boolean = parseBoolean(nextArg, `${arg}`)
                 options[optionConfig.name] = boolean
@@ -71,10 +71,24 @@ export function parseArgs(
             index++ // consume `nextArg`
             continue
           } catch (error) {
-            if (isNextArgOptionFlag === true) {
-              throw new Error(
-                createErrorMessage(optionConfig.type, `Option ${arg}`)
+            if (nextArgOption !== null) {
+              if (typeof optionConfig.type !== 'function') {
+                // if `optionConfig.type` _isn't_ a function: assume no value was specified
+                throw new Error(
+                  createErrorMessage(optionConfig.type, `Option ${arg}`)
+                )
+              }
+              // if `optionConfig.type` _is_ a function: assume no value was specified iff
+              // `nextArg` is actually a valid option name that was specified in `optionConfigs`
+              const nextArgOptionConfig = findOptionConfig(
+                nextArgOption.name,
+                optionConfigs
               )
+              if (nextArgOptionConfig !== null) {
+                throw new Error(
+                  createErrorMessage(optionConfig.type, `Option ${arg}`)
+                )
+              }
             }
             if (error.message === '') {
               throw new Error(`Invalid value for option ${arg}: '${nextArg}'`)

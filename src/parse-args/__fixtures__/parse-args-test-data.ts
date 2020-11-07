@@ -307,12 +307,12 @@ export const parseArgsTestData = [
       [['--foo', '42'], "Invalid value for option --foo: '42'"],
       [['--foo', '-7'], {}, { foo: 'A' }, []],
       [['--foo', '.5'], "Invalid value for option --foo: '.5'"],
-      [['--foo', '-.5'], 'Option --foo expects a value'],
+      [['--foo', '-.5'], "Invalid value for option --foo: '-.5'"],
       [['--foo', '3.142'], "Invalid value for option --foo: '3.142'"],
-      [['--foo', '-3.142'], 'Option --foo expects a value'],
+      [['--foo', '-3.142'], "Invalid value for option --foo: '-3.142'"],
       [['--foo', 'bar'], {}, { foo: 'B' }, []],
-      [['--foo', '-baz'], 'Option --foo expects a value'],
-      [['--foo', '--qux'], 'Option --foo expects a value'],
+      [['--foo', '-baz'], "Invalid value for option --foo: '-baz'"],
+      [['--foo', '--qux'], "Invalid value for option --foo: '--qux'"],
       [['--foo', '--'], 'Option --foo expects a value']
     ]
   },
