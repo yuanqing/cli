@@ -2,9 +2,9 @@ import { OptionConfig } from '../types'
 
 export function findOptionConfig(
   arg: string,
-  optionConfigs: Array<OptionConfig>
+  optionsConfig: Array<OptionConfig>
 ): null | OptionConfig {
-  for (const optionConfig of optionConfigs) {
+  for (const optionConfig of optionsConfig) {
     if (
       optionConfig.name === arg ||
       (typeof optionConfig.aliases !== 'undefined' &&

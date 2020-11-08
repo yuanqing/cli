@@ -6,8 +6,8 @@ import { parseArgs } from '../parse-args'
 
 for (const {
   name,
-  optionConfigs,
-  positionalConfigs,
+  optionsConfig,
+  positionalsConfig,
   tests
 } of parseArgsTestData) {
   for (const testData of tests) {
@@ -19,12 +19,12 @@ for (const {
         try {
           parseArgs(
             args,
-            typeof positionalConfigs === 'undefined'
+            typeof positionalsConfig === 'undefined'
               ? undefined
-              : (positionalConfigs as Array<PositionalConfig>),
-            typeof optionConfigs === 'undefined'
+              : (positionalsConfig as Array<PositionalConfig>),
+            typeof optionsConfig === 'undefined'
               ? undefined
-              : (optionConfigs as Array<OptionConfig>)
+              : (optionsConfig as Array<OptionConfig>)
           )
           t.fail()
         } catch (error) {
@@ -37,12 +37,12 @@ for (const {
       t.plan(3)
       const { options, positionals, remainder } = parseArgs(
         args,
-        typeof positionalConfigs === 'undefined'
+        typeof positionalsConfig === 'undefined'
           ? undefined
-          : (positionalConfigs as Array<PositionalConfig>),
-        typeof optionConfigs === 'undefined'
+          : (positionalsConfig as Array<PositionalConfig>),
+        typeof optionsConfig === 'undefined'
           ? undefined
-          : (optionConfigs as Array<OptionConfig>)
+          : (optionsConfig as Array<OptionConfig>)
       )
       t.deepEqual(positionals, testData[1])
       t.deepEqual(options, testData[2])

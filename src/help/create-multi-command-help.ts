@@ -3,7 +3,7 @@ import { stringifyExamples } from './utilities/stringify-examples'
 
 export function createMultiCommandHelp(
   name: string,
-  commandConfigs: { [key: string]: CommandConfig },
+  commandsConfig: { [key: string]: CommandConfig },
   description?: string,
   examples?: Array<string>
 ): string {
@@ -17,7 +17,7 @@ export function createMultiCommandHelp(
   result.push(`    $ ${name} <command> [options]`)
   result.push('')
   result.push('  Commands:')
-  result.push(stringifyCommands(commandConfigs))
+  result.push(stringifyCommands(commandsConfig))
   result.push('')
   result.push('  Options:')
   result.push('    -h, --help  Print this message')
@@ -31,12 +31,12 @@ export function createMultiCommandHelp(
   return result.join('\n')
 }
 
-function stringifyCommands(commandConfigs: {
+function stringifyCommands(commandsConfig: {
   [key: string]: CommandConfig
 }): string {
   const result = []
-  for (const commandName in commandConfigs) {
-    const commandConfig = commandConfigs[commandName]
+  for (const commandName in commandsConfig) {
+    const commandConfig = commandsConfig[commandName]
     result.push(`    ${commandName}  ${commandConfig.description}`)
   }
   return result.join('\n')

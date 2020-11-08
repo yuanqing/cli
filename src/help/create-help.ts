@@ -31,6 +31,11 @@ export function createHelp(name: string, commandConfig: CommandConfig): string {
   result.push('  Options:')
   result.push(stringifyRows(createOptionRows(commandConfig.options)))
   result.push('')
+  if (typeof commandConfig.shorthands !== 'undefined') {
+    result.push('  Shorthands:')
+    result.push(stringifyRows(createShorthandRows(commandConfig.shorthands)))
+    result.push('')
+  }
   if (
     typeof commandConfig.examples !== 'undefined' &&
     commandConfig.examples.length !== 0
@@ -43,10 +48,10 @@ export function createHelp(name: string, commandConfig: CommandConfig): string {
 }
 
 function createPositionalRows(
-  positionalConfigs: Array<PositionalConfig>
+  positionalsConfig: Array<PositionalConfig>
 ): Array<[string, string]> {
   const result: Array<[string, string]> = []
-  for (const positionalConfig of positionalConfigs) {
+  for (const positionalConfig of positionalsConfig) {
     result.push([
       `    <${positionalConfig.name}>`,
       typeof positionalConfig.description === 'undefined'
@@ -58,14 +63,14 @@ function createPositionalRows(
 }
 
 function createOptionRows(
-  optionConfigs?: Array<OptionConfig>
+  optionsConfig?: Array<OptionConfig>
 ): Array<[string, string]> {
   const result: Array<[string, string, string]> = [
     ['help', `    -h, --help`, 'Print this message.'],
     ['version', `    -v, --version`, 'Print the version.']
   ]
-  if (typeof optionConfigs !== 'undefined') {
-    for (const optionConfig of optionConfigs) {
+  if (typeof optionsConfig !== 'undefined') {
+    for (const optionConfig of optionsConfig) {
       result.push([
         optionConfig.name,
         `    ${stringifyFlags(optionConfig.name, optionConfig.aliases)}`,
@@ -94,4 +99,19 @@ function stringifyFlags(name: string, shorthands?: Array<string>): string {
     result.push(`-${shorthand}`)
   }
   return [result, mainFlag].join(', ')
+}
+
+function createShorthandRows(shorthandsConfig: {
+  [key: string]: Array<string>
+}) {
+  const result: Array<[string, string]> = []
+  for (const shorthandName in shorthandsConfig) {
+    result.push([
+      `    --${shorthandName}`,
+      shorthandsConfig[shorthandName].join(' ')
+    ])
+  }
+  return result.sort(function (x, y) {
+    return x[0].localeCompare(y[0])
+  })
 }

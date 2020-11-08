@@ -2,15 +2,15 @@ import { PositionalConfig } from '../../types'
 
 export function stringifyCliArgs(
   name: string,
-  positionalConfigs: undefined | Array<PositionalConfig>,
+  positionalsConfig: undefined | Array<PositionalConfig>,
   hasOptions: boolean
 ): string {
   const result = [name]
   if (
-    typeof positionalConfigs !== 'undefined' &&
-    positionalConfigs.length !== 0
+    typeof positionalsConfig !== 'undefined' &&
+    positionalsConfig.length !== 0
   ) {
-    for (const positionalConfig of positionalConfigs) {
+    for (const positionalConfig of positionalsConfig) {
       result.push(`<${positionalConfig.name}>`)
     }
   }

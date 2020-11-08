@@ -10,8 +10,8 @@ const stopParsingOptionsArg = '--' // stop parsing options when we see this
 
 export function parseArgs(
   args: Array<string>,
-  positionalConfigs?: Array<PositionalConfig>,
-  optionConfigs?: Array<OptionConfig>,
+  positionalsConfig?: Array<PositionalConfig>,
+  optionsConfig?: Array<OptionConfig>,
   shorthands?: { [key: string]: Array<string> }
 ): Result {
   const argsCopy =
@@ -33,12 +33,12 @@ export function parseArgs(
         stopParsingOptions = true
         continue
       }
-      if (option !== null && typeof optionConfigs !== 'undefined') {
+      if (option !== null && typeof optionsConfig !== 'undefined') {
         if (option.value !== null) {
           // insert `value` after `argCopy[index]`
           argsCopy.splice(index + 1, 0, option.value)
         }
-        const optionConfig = findOptionConfig(option.name, optionConfigs)
+        const optionConfig = findOptionConfig(option.name, optionsConfig)
         if (optionConfig !== null) {
           if (typeof options[optionConfig.name] !== 'undefined') {
             throw new Error(`Duplicate option: ${arg}`)
@@ -80,10 +80,10 @@ export function parseArgs(
                 )
               }
               // if `optionConfig.type` _is_ a function: assume no value was specified iff
-              // `nextArg` is actually a valid option name that was specified in `optionConfigs`
+              // `nextArg` is actually a valid option name that was specified in `optionsConfig`
               const nextArgOptionConfig = findOptionConfig(
                 nextArgOption.name,
-                optionConfigs
+                optionsConfig
               )
               if (nextArgOptionConfig !== null) {
                 throw new Error(
@@ -101,8 +101,8 @@ export function parseArgs(
     }
     const isArgOptionFlag = option !== null && stopParsingOptions === false
     if (
-      typeof positionalConfigs === 'undefined' ||
-      positionalIndex >= positionalConfigs.length
+      typeof positionalsConfig === 'undefined' ||
+      positionalIndex >= positionalsConfig.length
     ) {
       if (isArgOptionFlag === true) {
         throw new Error(`Invalid option: ${arg}`)
@@ -110,7 +110,7 @@ export function parseArgs(
       remainder.push(arg)
       continue
     }
-    const positionalConfig = positionalConfigs[positionalIndex]
+    const positionalConfig = positionalsConfig[positionalIndex]
     const positionalName = positionalConfig.name
     try {
       const parseValue = mapArgTypeToValueParser(positionalConfig.type)
@@ -131,8 +131,8 @@ export function parseArgs(
     }
   }
   // resolve `defaults` and `required`
-  if (typeof positionalConfigs !== 'undefined') {
-    for (const positionalConfig of positionalConfigs) {
+  if (typeof positionalsConfig !== 'undefined') {
+    for (const positionalConfig of positionalsConfig) {
       if (typeof positionals[positionalConfig.name] === 'undefined') {
         if (typeof positionalConfig.default !== 'undefined') {
           positionals[positionalConfig.name] = positionalConfig.default
@@ -144,8 +144,8 @@ export function parseArgs(
       }
     }
   }
-  if (typeof optionConfigs !== 'undefined') {
-    for (const optionConfig of optionConfigs) {
+  if (typeof optionsConfig !== 'undefined') {
+    for (const optionConfig of optionsConfig) {
       if (typeof options[optionConfig.name] === 'undefined') {
         if (typeof optionConfig.default !== 'undefined') {
           options[optionConfig.name] = optionConfig.default

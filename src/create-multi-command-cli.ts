@@ -6,7 +6,7 @@ import { CommandConfig, MultiCommandCliConfig, Result } from './types'
 
 export function createMultiCommandCli(
   multiCommandCliConfig: MultiCommandCliConfig,
-  commandConfigs: { [key: string]: CommandConfig },
+  commandsConfig: { [key: string]: CommandConfig },
   defaultCommandConfig?: CommandConfig
 ) {
   return function (args = process.argv.slice(2)): void | Result {
@@ -20,7 +20,7 @@ export function createMultiCommandCli(
         console.log(
           createMultiCommandHelp(
             multiCommandCliConfig.name,
-            commandConfigs,
+            commandsConfig,
             multiCommandCliConfig.description,
             multiCommandCliConfig.examples
           )
@@ -28,7 +28,7 @@ export function createMultiCommandCli(
         return
       }
     }
-    const commandConfig = commandConfigs[firstArg]
+    const commandConfig = commandsConfig[firstArg]
     if (typeof commandConfig === 'undefined') {
       if (typeof defaultCommandConfig === 'undefined') {
         throw new Error(`Invalid command: ${firstArg}`)
