@@ -1,6 +1,7 @@
 import { CommandConfig, OptionConfig, PositionalConfig } from '../types'
 import { stringifyCliArgs } from './utilities/stringify-cli-args'
 import { stringifyExamples } from './utilities/stringify-examples'
+import { stringifyRows } from './utilities/stringify-rows'
 
 export function createHelp(name: string, commandConfig: CommandConfig): string {
   const result = []
@@ -24,18 +25,11 @@ export function createHelp(name: string, commandConfig: CommandConfig): string {
     commandConfig.positionals.length !== 0
   ) {
     result.push('  Arguments:')
-    result.push(stringifyPositionals(commandConfig.positionals))
+    result.push(stringifyRows(createPositionalRows(commandConfig.positionals)))
     result.push('')
   }
   result.push('  Options:')
-  if (
-    typeof commandConfig.options !== 'undefined' &&
-    commandConfig.options.length !== 0
-  ) {
-    result.push(stringifyOptions(commandConfig.options))
-  }
-  result.push('    -h, --help  Print this message')
-  result.push('    -v, --version  Print the version')
+  result.push(stringifyRows(createOptionRows(commandConfig.options)))
   result.push('')
   if (
     typeof commandConfig.examples !== 'undefined' &&
@@ -48,31 +42,46 @@ export function createHelp(name: string, commandConfig: CommandConfig): string {
   return result.join('\n')
 }
 
-function stringifyPositionals(
+function createPositionalRows(
   positionalConfigs: Array<PositionalConfig>
-): string {
-  const result = []
+): Array<[string, string]> {
+  const result: Array<[string, string]> = []
   for (const positionalConfig of positionalConfigs) {
-    const line = [`    <${positionalConfig.name}>`]
-    if (typeof positionalConfig.description !== 'undefined') {
-      line.push(positionalConfig.description)
-    }
-    result.push(line.join('  '))
+    result.push([
+      `    <${positionalConfig.name}>`,
+      typeof positionalConfig.description === 'undefined'
+        ? ''
+        : positionalConfig.description
+    ])
   }
-  return result.join('\n')
+  return result
 }
 
-function stringifyOptions(optionConfigs: Array<OptionConfig>): string {
-  const result = []
-  for (const optionConfig of optionConfigs) {
-    const flags = stringifyFlags(optionConfig.name, optionConfig.aliases)
-    const line = [`    ${flags}`]
-    if (typeof optionConfig.description !== 'undefined') {
-      line.push(optionConfig.description)
+function createOptionRows(
+  optionConfigs?: Array<OptionConfig>
+): Array<[string, string]> {
+  const result: Array<[string, string, string]> = [
+    ['help', `    -h, --help`, 'Print this message.'],
+    ['version', `    -v, --version`, 'Print the version.']
+  ]
+  if (typeof optionConfigs !== 'undefined') {
+    for (const optionConfig of optionConfigs) {
+      result.push([
+        optionConfig.name,
+        `    ${stringifyFlags(optionConfig.name, optionConfig.aliases)}`,
+        typeof optionConfig.description === 'undefined'
+          ? ''
+          : optionConfig.description
+      ])
     }
-    result.push(line.join('  '))
   }
-  return result.join('\n')
+  return result
+    .sort(function (x, y) {
+      return x[0].localeCompare(y[0])
+    })
+    .map(function (row) {
+      return [row[1], row[2]]
+    })
 }
 
 function stringifyFlags(name: string, shorthands?: Array<string>): string {
