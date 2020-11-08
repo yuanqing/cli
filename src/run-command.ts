@@ -1,16 +1,18 @@
-/* eslint-disable no-console */
 import { parseArgs } from './parse-args/parse-args'
-import { CommandConfig } from './types'
+import { CommandConfig, Result } from './types'
 
 export function runCommand(
   args: Array<string>,
   commandConfig: CommandConfig
-): unknown {
-  const { positionals, options, remainder } = parseArgs(
+): void | Result {
+  const result = parseArgs(
     args,
     commandConfig.positionals,
     commandConfig.options,
     commandConfig.shorthands
   )
-  return commandConfig.handler(positionals, options, remainder)
+  if (typeof commandConfig.handler === 'undefined') {
+    return result
+  }
+  commandConfig.handler(result)
 }

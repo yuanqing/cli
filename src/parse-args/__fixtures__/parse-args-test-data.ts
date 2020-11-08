@@ -1,7 +1,7 @@
 export const parseArgsTestData = [
   {
     name: 'option - default',
-    optionConfigs: [{ default: 42, name: 'foo', type: 'number' }],
+    optionConfigs: [{ default: 42, name: 'foo', type: 'NUMBER' }],
     tests: [
       [[], {}, { foo: 42 }, []],
       [['--foo'], 'Option --foo must be a number'],
@@ -11,7 +11,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'option - required',
-    optionConfigs: [{ name: 'foo', required: true, type: 'number' }],
+    optionConfigs: [{ name: 'foo', required: true, type: 'NUMBER' }],
     tests: [
       [[], 'Option --foo is required'],
       [['--foo'], 'Option --foo must be a number'],
@@ -20,7 +20,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'option - duplicated',
-    optionConfigs: [{ name: 'foo', type: 'number' }],
+    optionConfigs: [{ name: 'foo', type: 'NUMBER' }],
     tests: [
       [['--foo', '42', '--foo'], 'Duplicate option: --foo'],
       [['--foo', '42', '--foo', '1'], 'Duplicate option: --foo']
@@ -28,7 +28,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'option - single-dash option',
-    optionConfigs: [{ name: 'foo', type: 'number' }],
+    optionConfigs: [{ name: 'foo', type: 'NUMBER' }],
     tests: [
       [['-foo'], 'Option -foo must be a number'],
       [['-foo', '42'], {}, { foo: 42 }, []]
@@ -36,7 +36,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'option - alias',
-    optionConfigs: [{ aliases: ['f'], name: 'foo', type: 'number' }],
+    optionConfigs: [{ aliases: ['f'], name: 'foo', type: 'NUMBER' }],
     tests: [
       [[], {}, {}, []],
       [['-f'], 'Option -f must be a number'],
@@ -47,7 +47,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'option - boolean',
-    optionConfigs: [{ name: 'foo', type: 'boolean' }],
+    optionConfigs: [{ name: 'foo', type: 'BOOLEAN' }],
     tests: [
       [[], {}, {}, []],
       [['false'], {}, {}, ['false']],
@@ -83,7 +83,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'option - number',
-    optionConfigs: [{ name: 'foo', type: 'number' }],
+    optionConfigs: [{ name: 'foo', type: 'NUMBER' }],
     tests: [
       [[], {}, {}, []],
       [['false'], {}, {}, ['false']],
@@ -119,7 +119,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'option - string',
-    optionConfigs: [{ name: 'foo', type: 'string' }],
+    optionConfigs: [{ name: 'foo', type: 'STRING' }],
     tests: [
       [[], {}, {}, []],
       [['false'], {}, {}, ['false']],
@@ -318,7 +318,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'positional - default',
-    positionalConfigs: [{ default: 42, name: 'foo', type: 'number' }],
+    positionalConfigs: [{ default: 42, name: 'foo', type: 'NUMBER' }],
     tests: [
       [[], { foo: 42 }, {}, []],
       [['bar'], "Argument <foo> must be a number but got 'bar'"],
@@ -328,7 +328,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'positional - required',
-    positionalConfigs: [{ name: 'foo', required: true, type: 'number' }],
+    positionalConfigs: [{ name: 'foo', required: true, type: 'NUMBER' }],
     tests: [
       [[], 'Argument <foo> is required'],
       [['bar'], "Argument <foo> must be a number but got 'bar'"],
@@ -338,7 +338,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'positional - boolean',
-    positionalConfigs: [{ name: 'foo', type: 'boolean' }],
+    positionalConfigs: [{ name: 'foo', type: 'BOOLEAN' }],
     tests: [
       [[], {}, {}, []],
       [['false'], { foo: false }, {}, []],
@@ -386,7 +386,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'positional - number',
-    positionalConfigs: [{ name: 'foo', type: 'number' }],
+    positionalConfigs: [{ name: 'foo', type: 'NUMBER' }],
     tests: [
       [[], {}, {}, []],
       [['false'], "Argument <foo> must be a number but got 'false'"],
@@ -422,7 +422,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'positional - string',
-    positionalConfigs: [{ name: 'foo', type: 'string' }],
+    positionalConfigs: [{ name: 'foo', type: 'STRING' }],
     tests: [
       [[], {}, {}, []],
       [['false'], { foo: 'false' }, {}, []],
@@ -597,8 +597,8 @@ export const parseArgsTestData = [
   },
   {
     name: 'remainder args',
-    optionConfigs: [{ name: 'bar', type: 'boolean' }],
-    positionalConfigs: [{ name: 'foo', type: 'number' }],
+    optionConfigs: [{ name: 'bar', type: 'BOOLEAN' }],
+    positionalConfigs: [{ name: 'foo', type: 'NUMBER' }],
     tests: [
       [
         ['--', '--bar', '42', '--bar'],
@@ -611,7 +611,7 @@ export const parseArgsTestData = [
   },
   {
     name: 'equals',
-    optionConfigs: [{ name: 'foo', type: 'number' }],
+    optionConfigs: [{ name: 'foo', type: 'NUMBER' }],
     tests: [
       [['--foo'], 'Option --foo must be a number'],
       [['--foo=42'], {}, { foo: 42 }, []]

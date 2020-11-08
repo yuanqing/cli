@@ -1,4 +1,4 @@
-import { ArgType } from '../types'
+import { Type, ValueParser } from '../types'
 import { createEnumParser } from './parse-value/create-enum-parser'
 import { parseBoolean } from './parse-value/parse-boolean'
 import { parseInteger } from './parse-value/parse-integer'
@@ -9,42 +9,35 @@ import { parseNumberPositive } from './parse-value/parse-number-positive'
 import { parseNumberPositiveNonZero } from './parse-value/parse-number-positive-non-zero'
 import { parseString } from './parse-value/parse-string'
 
-export function mapArgTypeToValueParser(
-  type: ArgType
-): (arg: string, name: string) => unknown {
+export function mapArgTypeToValueParser(type: Type): ValueParser {
+  switch (type) {
+    case 'BOOLEAN': {
+      return parseBoolean
+    }
+    case 'NUMBER': {
+      return parseNumber
+    }
+    case 'POSITIVE_NUMBER': {
+      return parseNumberPositive
+    }
+    case 'NON_ZERO_POSITIVE_NUMBER': {
+      return parseNumberPositiveNonZero
+    }
+    case 'INTEGER': {
+      return parseInteger
+    }
+    case 'POSITIVE_INTEGER': {
+      return parseIntegerPositive
+    }
+    case 'NON_ZERO_POSITIVE_INTEGER': {
+      return parseIntegerPositiveNonZero
+    }
+    case 'STRING': {
+      return parseString
+    }
+  }
   if (typeof type === 'function') {
     return type
-  }
-  if (typeof type === 'string') {
-    switch (type) {
-      case 'boolean': {
-        return parseBoolean
-      }
-      case 'number': {
-        return parseNumber
-      }
-      case 'positive number': {
-        return parseNumberPositive
-      }
-      case 'non-zero positive number': {
-        return parseNumberPositiveNonZero
-      }
-      case 'integer': {
-        return parseInteger
-      }
-      case 'positive integer': {
-        return parseIntegerPositive
-      }
-      case 'non-zero positive integer': {
-        return parseIntegerPositiveNonZero
-      }
-      case 'string': {
-        return parseString
-      }
-      default: {
-        throw new Error('Invalid type')
-      }
-    }
   }
   return createEnumParser(type)
 }

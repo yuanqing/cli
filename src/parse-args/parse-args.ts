@@ -1,6 +1,6 @@
-import { OptionConfig, PositionalConfig } from '../types'
-import { createErrorMessage } from './create-error-message'
+import { OptionConfig, PositionalConfig, Result } from '../types'
 import { findOptionConfig } from './find-option-config'
+import { mapArgTypeToErrorMessage } from './map-arg-type-to-error-message'
 import { mapArgTypeToValueParser } from './map-arg-type-to-value-parser'
 import { parseOptionFlag } from './parse-option-flag'
 import { parseBoolean } from './parse-value/parse-boolean'
@@ -13,11 +13,7 @@ export function parseArgs(
   positionalConfigs?: Array<PositionalConfig>,
   optionConfigs?: Array<OptionConfig>,
   shorthands?: { [key: string]: Array<string> }
-): {
-  positionals: { [key: string]: unknown }
-  options: { [key: string]: unknown }
-  remainder: Array<string>
-} {
+): Result {
   const argsCopy =
     typeof shorthands === 'undefined'
       ? args.slice()
@@ -51,7 +47,7 @@ export function parseArgs(
           const nextArgOption = parseOptionFlag(nextArg)
           const isNextArgUndefined =
             typeof nextArg === 'undefined' || nextArg === stopParsingOptionsArg
-          if (optionConfig.type === 'boolean') {
+          if (optionConfig.type === 'BOOLEAN') {
             options[optionConfig.name] = true
             if (isNextArgUndefined === false && nextArgOption === null) {
               try {
@@ -66,12 +62,12 @@ export function parseArgs(
           }
           if (isNextArgUndefined === true) {
             throw new Error(
-              createErrorMessage(optionConfig.type, `Option ${arg}`)
+              mapArgTypeToErrorMessage(optionConfig.type, `Option ${arg}`)
             )
           }
           try {
-            const valueParser = mapArgTypeToValueParser(optionConfig.type)
-            const value = valueParser(nextArg, `Option ${arg}`)
+            const parseValue = mapArgTypeToValueParser(optionConfig.type)
+            const value = parseValue(nextArg, `Option ${arg}`)
             options[optionConfig.name] = value
             index++ // consume `nextArg`
             continue
@@ -80,7 +76,7 @@ export function parseArgs(
               if (typeof optionConfig.type !== 'function') {
                 // if `optionConfig.type` _isn't_ a function: assume no value was specified
                 throw new Error(
-                  createErrorMessage(optionConfig.type, `Option ${arg}`)
+                  mapArgTypeToErrorMessage(optionConfig.type, `Option ${arg}`)
                 )
               }
               // if `optionConfig.type` _is_ a function: assume no value was specified iff
@@ -91,7 +87,7 @@ export function parseArgs(
               )
               if (nextArgOptionConfig !== null) {
                 throw new Error(
-                  createErrorMessage(optionConfig.type, `Option ${arg}`)
+                  mapArgTypeToErrorMessage(optionConfig.type, `Option ${arg}`)
                 )
               }
             }
@@ -117,8 +113,8 @@ export function parseArgs(
     const positionalConfig = positionalConfigs[positionalIndex]
     const positionalName = positionalConfig.name
     try {
-      const valueParser = mapArgTypeToValueParser(positionalConfig.type)
-      const value = valueParser(arg, `Argument <${positionalName}>`)
+      const parseValue = mapArgTypeToValueParser(positionalConfig.type)
+      const value = parseValue(arg, `Argument <${positionalName}>`)
       positionals[positionalName] = value
       positionalIndex++
       continue

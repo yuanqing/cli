@@ -10,15 +10,15 @@ const cliConfig = {
 test('valid option', function (t) {
   t.plan(3)
   const args = ['--foo']
-  const cli = createCli(cliConfig, {
-    handler: function (positionals, options, remainder) {
+  const parse = createCli(cliConfig, {
+    handler: function ({ positionals, options, remainder }) {
       t.deepEqual(positionals, {})
       t.deepEqual(options, { foo: true })
       t.deepEqual(remainder, [])
     },
-    options: [{ name: 'foo', type: 'boolean' }]
+    options: [{ name: 'foo', type: 'BOOLEAN' }]
   })
-  cli(args)
+  parse(args)
 })
 
 test('invalid option', function (t) {
@@ -28,7 +28,7 @@ test('invalid option', function (t) {
     handler: function () {
       t.fail()
     },
-    options: [{ name: 'foo', type: 'boolean' }]
+    options: [{ name: 'foo', type: 'BOOLEAN' }]
   })
   try {
     cli(args)

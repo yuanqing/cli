@@ -17,12 +17,12 @@ test('valid command', function (t) {
       }
     },
     biz: {
-      handler: function (positionals, options, remainder) {
+      handler: function ({ positionals, options, remainder }) {
         t.deepEqual(positionals, {})
         t.deepEqual(options, { foo: true })
         t.deepEqual(remainder, [])
       },
-      options: [{ name: 'foo', type: 'boolean' }]
+      options: [{ name: 'foo', type: 'BOOLEAN' }]
     }
   })
   cli(args)

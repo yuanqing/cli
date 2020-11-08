@@ -2,14 +2,14 @@
 import { createHelp } from './help/create-help'
 import { createMultiCommandHelp } from './help/create-multi-command-help'
 import { runCommand } from './run-command'
-import { CommandConfig, MultiCommandCliConfig } from './types'
+import { CommandConfig, MultiCommandCliConfig, Result } from './types'
 
 export function createMultiCommandCli(
   multiCommandCliConfig: MultiCommandCliConfig,
   commandConfigs: { [key: string]: CommandConfig },
   defaultCommandConfig?: CommandConfig
 ) {
-  return function (args: Array<string>): unknown {
+  return function (args = process.argv.slice(2)): void | Result {
     const firstArg = args[0]
     if (args.length === 1) {
       if (firstArg === '--version' || firstArg === '-v') {
