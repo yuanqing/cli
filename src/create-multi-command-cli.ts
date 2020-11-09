@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+import { containsOption } from './contains-option'
 import { createHelp } from './help/create-help'
 import { createMultiCommandHelp } from './help/create-multi-command-help'
 import { runCommand } from './run-command'
@@ -10,23 +10,23 @@ export function createMultiCommandCli(
   defaultCommandConfig?: CommandConfig
 ) {
   return function (args = process.argv.slice(2)): void | Result {
+    if (containsOption(args, ['version', 'v']) === true) {
+      // eslint-disable-next-line no-console
+      console.log(multiCommandCliConfig.version)
+      return
+    }
     const firstArg = args[0]
-    if (args.length === 1) {
-      if (firstArg === '--version' || firstArg === '-v') {
-        console.log(multiCommandCliConfig.version)
-        return
-      }
-      if (firstArg === '--help' || firstArg === '-h') {
-        console.log(
-          createMultiCommandHelp(
-            multiCommandCliConfig.name,
-            commandsConfig,
-            multiCommandCliConfig.description,
-            multiCommandCliConfig.examples
-          )
+    if (args.length === 1 && (firstArg === '--help' || firstArg === '-h')) {
+      // eslint-disable-next-line no-console
+      console.log(
+        createMultiCommandHelp(
+          multiCommandCliConfig.name,
+          commandsConfig,
+          multiCommandCliConfig.description,
+          multiCommandCliConfig.examples
         )
-        return
-      }
+      )
+      return
     }
     const commandConfig = commandsConfig[firstArg]
     if (typeof commandConfig === 'undefined') {
@@ -35,8 +35,8 @@ export function createMultiCommandCli(
       }
       return runCommand(args, defaultCommandConfig)
     }
-    const secondArg = args[1]
-    if (secondArg === '--help' || secondArg === '-h') {
+    if (containsOption(args.slice(1), ['help', 'h']) === true) {
+      // eslint-disable-next-line no-console
       console.log(
         createHelp(`${multiCommandCliConfig.name} ${firstArg}`, commandConfig)
       )

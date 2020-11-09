@@ -1,3 +1,4 @@
+import { stopParsingOptionsArg } from '../stop-parsing-options-arg'
 import { OptionConfig, PositionalConfig, Result } from '../types'
 import { findOptionConfig } from './find-option-config'
 import { mapArgTypeToErrorMessage } from './map-arg-type-to-error-message'
@@ -5,8 +6,6 @@ import { mapArgTypeToValueParser } from './map-arg-type-to-value-parser'
 import { parseOptionFlag } from './parse-option-flag'
 import { parseBoolean } from './parse-value/parse-boolean'
 import { sortObjectByKey } from './sort-object-by-key'
-
-const stopParsingOptionsArg = '--' // stop parsing options when we see this
 
 export function parseArgs(
   args: Array<string>,

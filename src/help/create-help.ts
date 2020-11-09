@@ -108,7 +108,7 @@ function createShorthandRows(shorthandsConfig: {
   for (const shorthandName in shorthandsConfig) {
     result.push([
       `    --${shorthandName}`,
-      shorthandsConfig[shorthandName].join(' ')
+      `Equivalent to: ${shorthandsConfig[shorthandName].join(' ')}`
     ])
   }
   return result.sort(function (x, y) {
