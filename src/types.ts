@@ -36,14 +36,7 @@ export interface OptionConfig extends PositionalConfig {
 }
 
 export type Type =
-  | 'BOOLEAN'
-  | 'INTEGER'
-  | 'POSITIVE_INTEGER'
-  | 'NON_ZERO_POSITIVE_INTEGER'
-  | 'NUMBER'
-  | 'POSITIVE_NUMBER'
-  | 'NON_ZERO_POSITIVE_NUMBER'
-  | 'STRING'
+  | string
   | ValueParser
   | Array<boolean | number | string | null>
 

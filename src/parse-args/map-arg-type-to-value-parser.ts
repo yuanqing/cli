@@ -10,30 +10,35 @@ import { parseNumberPositiveNonZero } from './parse-value/parse-number-positive-
 import { parseString } from './parse-value/parse-string'
 
 export function mapArgTypeToValueParser(type: Type): ValueParser {
-  switch (type) {
-    case 'BOOLEAN': {
-      return parseBoolean
-    }
-    case 'NUMBER': {
-      return parseNumber
-    }
-    case 'POSITIVE_NUMBER': {
-      return parseNumberPositive
-    }
-    case 'NON_ZERO_POSITIVE_NUMBER': {
-      return parseNumberPositiveNonZero
-    }
-    case 'INTEGER': {
-      return parseInteger
-    }
-    case 'POSITIVE_INTEGER': {
-      return parseIntegerPositive
-    }
-    case 'NON_ZERO_POSITIVE_INTEGER': {
-      return parseIntegerPositiveNonZero
-    }
-    case 'STRING': {
-      return parseString
+  if (typeof type === 'string') {
+    switch (type) {
+      case 'BOOLEAN': {
+        return parseBoolean
+      }
+      case 'NUMBER': {
+        return parseNumber
+      }
+      case 'POSITIVE_NUMBER': {
+        return parseNumberPositive
+      }
+      case 'NON_ZERO_POSITIVE_NUMBER': {
+        return parseNumberPositiveNonZero
+      }
+      case 'INTEGER': {
+        return parseInteger
+      }
+      case 'POSITIVE_INTEGER': {
+        return parseIntegerPositive
+      }
+      case 'NON_ZERO_POSITIVE_INTEGER': {
+        return parseIntegerPositiveNonZero
+      }
+      case 'STRING': {
+        return parseString
+      }
+      default: {
+        throw new Error('Invalid type')
+      }
     }
   }
   if (typeof type === 'function') {
