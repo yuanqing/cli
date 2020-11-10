@@ -1,5 +1,6 @@
 import { stopParsingOptionsArg } from '../stop-parsing-options-arg'
 import { OptionConfig, PositionalConfig, Result } from '../types'
+import { camelCaseObjectKeys } from './camel-case-object-keys'
 import { findOptionConfig } from './find-option-config'
 import { mapArgTypeToErrorMessage } from './map-arg-type-to-error-message'
 import { mapArgTypeToValueParser } from './map-arg-type-to-value-parser'
@@ -157,8 +158,8 @@ export function parseArgs(
     }
   }
   return {
-    options: sortObjectByKey(options),
-    positionals: sortObjectByKey(positionals),
+    options: sortObjectByKey(camelCaseObjectKeys(options)),
+    positionals: sortObjectByKey(camelCaseObjectKeys(positionals)),
     remainder
   }
 }
