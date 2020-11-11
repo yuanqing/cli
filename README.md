@@ -6,11 +6,11 @@
 $ npm install --dev @yuanqing/cli
 ```
 
-<!-- ```js markdown-interpolate: cat example/cli.ts -->
+<!-- ```js markdown-interpolate: cat example/my-cli.js -->
 ```js
 #!/usr/bin/env node
 
-import { createCli } from '../src'
+import { createCli } from '@yuanqing/src'
 
 const config = {
   name: 'my-cli',

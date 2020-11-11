@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { createCli } from '../src'
+import { createCli } from '@yuanqing/src'
 
 const config = {
   name: 'my-cli',
