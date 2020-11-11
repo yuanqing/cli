@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { createCli } from '@yuanqing/cli'
+
+import { createCli } from '../src'
 
 const config = {
   name: 'my-cli',
@@ -9,7 +10,7 @@ const commandConfig = {
   positionals: [
     {
       type: 'STRING',
-      name: 'files',
+      name: 'glob-pattern',
       description: 'Glob of input files.',
       required: true,
     }
@@ -48,9 +49,9 @@ try {
   const result = createCli(config, commandConfig)(process.argv.slice(2))
   if (typeof result !== 'undefined') {
     const { positionals, options, remainder } = result
-    console.log(positionals) //=> { files: '*' }
-    console.log(options)     //=> { minify: true, output: './dist', parallel: 10 }
-    console.log(remainder)   //=> [ 'foo', 'bar' ]
+    console.log(positionals)
+    console.log(options)
+    console.log(remainder)
   }
 } catch (error) {
   console.error(`my-cli: ${error.message}`)
