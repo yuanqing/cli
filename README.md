@@ -88,14 +88,14 @@ $ my-cli 'src/**/*' -m -o './dist' -p 42
 []
 ```
 
-Throws if required positional arguments (or options) were not specified:
+Throws an error if any required positional arguments (or options) were not specified:
 
 ```sh
 $ my-cli
 Argument <files> is required
 ```
 
-Throws if options (or positional arguments) were invalid:
+Throws an error if any options (or positional arguments) were invalid:
 
 ```sh
 $ my-cli 'src/**/*' -x
