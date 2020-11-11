@@ -6,7 +6,7 @@
 $ npm install --dev @yuanqing/cli
 ```
 
-<!-- ```js markdown-interpolate: cat example/my-cli.js -->
+<!-- ```js markdown-interpolate: cat example/my-cli.ts -->
 ```js
 #!/usr/bin/env node
 
@@ -64,7 +64,7 @@ try {
     console.log(remainder)
   }
 } catch (error) {
-  console.error(`my-cli: ${error.message}`)
+  console.error(error.message)
   process.exit(1)
 }
 ```
@@ -92,19 +92,19 @@ Throws if required positional arguments (or options) were not specified:
 
 ```sh
 $ my-cli
-my-cli: Argument <files> is required
+Argument <files> is required
 ```
 
 Throws if options (or positional arguments) were invalid:
 
 ```sh
 $ my-cli 'src/**/*' -x
-my-cli: Invalid option: -x
+Invalid option: -x
 ```
 
 ```sh
 $ my-cli 'src/**/*' --parallel 0
-my-cli: Option --parallel must be a non-zero positive integer but got '0'
+Option --parallel must be a non-zero positive integer but got '0'
 ```
 
 Uses the configured `default` value for unspecified options (or positional arguments):

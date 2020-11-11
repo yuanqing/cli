@@ -54,6 +54,6 @@ try {
     console.log(remainder)
   }
 } catch (error) {
-  console.error(`my-cli: ${error.message}`)
+  console.error(error.message)
   process.exit(1)
 }
