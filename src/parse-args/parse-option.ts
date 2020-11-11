@@ -1,6 +1,6 @@
 const optionFlagRegex = /--?([^-].*)/
 
-export function parseOptionFlag(
+export function parseOption(
   arg?: string
 ): null | { name: string; value: null | string } {
   if (typeof arg === 'undefined') {
