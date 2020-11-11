@@ -1,11 +1,16 @@
-# @yuanqing/cli
+# @yuanqing/cli [![npm Version](https://img.shields.io/npm/v/@yuanqing/cli?cacheSeconds=1800)](https://www.npmjs.org/package/@yuanqing/cli) [![build](https://github.com/yuanqing/cli/workflows/build/badge.svg)](https://github.com/yuanqing/cli/actions?query=workflow%3Abuild)
 
-## Example
+## Quick start
 
-<!-- ```js markdown-interpolate: cat example/single-command-cli.ts -->
+```sh
+$ npm install --dev @yuanqing/cli
+```
+
+<!-- ```js markdown-interpolate: cat example/cli.ts -->
 ```js
 #!/usr/bin/env node
-import { createCli } from '@yuanqing/cli'
+
+import { createCli } from '../src'
 
 const config = {
   name: 'my-cli',
@@ -15,7 +20,7 @@ const commandConfig = {
   positionals: [
     {
       type: 'STRING',
-      name: 'files',
+      name: 'glob-pattern',
       description: 'Glob of input files.',
       required: true,
     }
@@ -54,9 +59,9 @@ try {
   const result = createCli(config, commandConfig)(process.argv.slice(2))
   if (typeof result !== 'undefined') {
     const { positionals, options, remainder } = result
-    console.log(positionals) //=> { files: '*' }
-    console.log(options)     //=> { minify: true, output: './dist', parallel: 10 }
-    console.log(remainder)   //=> [ 'foo', 'bar' ]
+    console.log(positionals)
+    console.log(options)
+    console.log(remainder)
   }
 } catch (error) {
   console.error(`my-cli: ${error.message}`)
@@ -65,21 +70,71 @@ try {
 ```
 <!-- ``` end -->
 
+Parses positional arguments and options:
+
 ```sh
-$ my-cli '*' --minify --output './dist' --parallel 10 -- foo bar
-{ files: '*' }
-{ minify: true, output: './dist', parallel: 10 }
-[ 'foo', 'bar' ]
+$ my-cli 'src/**/*' --minify --output './dist' --parallel 42
+{ globPattern: 'src/**/*' }
+{ minify: true, output: './dist', parallel: 42 }
+[]
 ```
+
+Handles option aliases:
+
+```sh
+$ my-cli 'src/**/*' -m -o './dist' -p 42
+{ globPattern: 'src/**/*' }
+{ minify: true, output: './dist', parallel: 42 }
+[]
+```
+
+Throws if required positional arguments (or options) were not specified:
+
+```sh
+$ my-cli
+my-cli: Argument <files> is required
+```
+
+Throws if options (or positional arguments) were invalid:
+
+```sh
+$ my-cli 'src/**/*' -x
+my-cli: Invalid option: -x
+```
+
+```sh
+$ my-cli 'src/**/*' --parallel 0
+my-cli: Option --parallel must be a non-zero positive integer but got '0'
+```
+
+Uses the configured `default` value for unspecified options (or positional arguments):
+
+```sh
+$ my-cli 'src/**/*'
+{ globPattern: 'src/**/*' }
+{ minify: false, output: './build', parallel: 3 }
+[]
+```
+
+Handles remainder arguments:
+
+```sh
+$ my-cli 'src/**/*' foo -- bar --baz
+{ globPattern: 'src/**/*' }
+{ minify: false, output: './build', parallel: 3 }
+[ 'foo', 'bar', '--baz' ]
+```
+
+Prints a nice usage message with `--help` or `-h`:
 
 ```sh
 $ my-cli --help
 
   Usage:
-    $ my-cli <files> [options]
+    $ my-cli <glob-pattern> [options]
 
   Arguments:
-    <files>  Glob of input files.
+    <glob-pattern>  Glob of input files.
 
   Options:
     -h, --help      Print this message.
@@ -96,15 +151,11 @@ $ my-cli --help
 
 ```
 
+Prints the version with `--version` or `-v`:
+
 ```sh
 $ my-cli --version
 1.0.0
-```
-
-## Installation
-
-```sh
-$ npm install --dev @yuanqing/cli
 ```
 
 ## License
