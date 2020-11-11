@@ -10,7 +10,7 @@ $ npm install --dev @yuanqing/cli
 ```js
 #!/usr/bin/env node
 
-import { createCli } from '@yuanqing/src'
+import { createCli } from '@yuanqing/cli'
 
 const config = {
   name: 'my-cli',
