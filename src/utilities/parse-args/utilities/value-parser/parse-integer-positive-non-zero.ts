@@ -1,4 +1,4 @@
-import { positiveIntegerRegex, zeroRegex } from './regex'
+import { positiveIntegerRegex, zeroRegex } from './regexes'
 
 export function parseIntegerPositiveNonZero(arg: string, name: string): number {
   const number = parseFloat(arg)

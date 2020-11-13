@@ -1,4 +1,4 @@
-import { integerRegex, numberRegex } from './regex'
+import { integerRegex, numberRegex } from './regexes'
 
 export function parseNumber(arg: string, name: string): number {
   const number = parseFloat(arg)

@@ -1,4 +1,4 @@
-import { PositionalConfig } from '../../types'
+import { PositionalConfig } from '../../../types'
 
 export function stringifyCliArgs(
   name: string,

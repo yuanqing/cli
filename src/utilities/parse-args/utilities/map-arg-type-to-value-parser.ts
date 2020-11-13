@@ -1,13 +1,13 @@
-import { Type, ValueParser } from '../types'
-import { createEnumParser } from './parse-value/create-enum-parser'
-import { parseBoolean } from './parse-value/parse-boolean'
-import { parseInteger } from './parse-value/parse-integer'
-import { parseIntegerPositive } from './parse-value/parse-integer-positive'
-import { parseIntegerPositiveNonZero } from './parse-value/parse-integer-positive-non-zero'
-import { parseNumber } from './parse-value/parse-number'
-import { parseNumberPositive } from './parse-value/parse-number-positive'
-import { parseNumberPositiveNonZero } from './parse-value/parse-number-positive-non-zero'
-import { parseString } from './parse-value/parse-string'
+import { Type, ValueParser } from '../../../types'
+import { createEnumParser } from './value-parser/create-enum-parser'
+import { parseBoolean } from './value-parser/parse-boolean'
+import { parseInteger } from './value-parser/parse-integer'
+import { parseIntegerPositive } from './value-parser/parse-integer-positive'
+import { parseIntegerPositiveNonZero } from './value-parser/parse-integer-positive-non-zero'
+import { parseNumber } from './value-parser/parse-number'
+import { parseNumberPositive } from './value-parser/parse-number-positive'
+import { parseNumberPositiveNonZero } from './value-parser/parse-number-positive-non-zero'
+import { parseString } from './value-parser/parse-string'
 
 export function mapArgTypeToValueParser(type: Type): ValueParser {
   if (typeof type === 'string') {

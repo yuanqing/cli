@@ -1,4 +1,4 @@
-import { OptionConfig } from '../types'
+import { OptionConfig } from '../../../types'
 
 export function findOptionConfig(
   arg: string,

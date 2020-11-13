@@ -1,5 +1,5 @@
 import { stringifyEnum } from '../stringify-enum'
-import { falseRegex, trueRegex } from './regex'
+import { falseRegex, trueRegex } from './regexes'
 
 export function createEnumParser(
   values: Array<boolean | number | string | null>

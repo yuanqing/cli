@@ -1,4 +1,4 @@
-import { CommandConfig } from '../types'
+import { CommandConfig } from '../../types'
 import { stringifyExamples } from './utilities/stringify-examples'
 
 export function createMultiCommandHelp(

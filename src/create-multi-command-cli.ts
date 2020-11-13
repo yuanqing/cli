@@ -1,8 +1,8 @@
-import { containsOption } from './contains-option'
-import { createHelp } from './help/create-help'
-import { createMultiCommandHelp } from './help/create-multi-command-help'
-import { runCommand } from './run-command'
 import { CommandConfig, MultiCommandCliConfig, Result } from './types'
+import { containsOption } from './utilities/contains-option'
+import { createHelp } from './utilities/help/create-help'
+import { createMultiCommandHelp } from './utilities/help/create-multi-command-help'
+import { runCommand } from './utilities/run-command'
 
 export function createMultiCommandCli(
   multiCommandCliConfig: MultiCommandCliConfig,

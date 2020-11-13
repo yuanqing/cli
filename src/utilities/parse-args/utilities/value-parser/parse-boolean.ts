@@ -1,4 +1,4 @@
-import { falseRegex, trueRegex } from './regex'
+import { falseRegex, trueRegex } from './regexes'
 
 export function parseBoolean(arg: string, name: string): boolean {
   if (falseRegex.test(arg) === true) {

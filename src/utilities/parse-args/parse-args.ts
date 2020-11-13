@@ -1,13 +1,13 @@
-import { stopParsingOptionsArg } from '../stop-parsing-options-arg'
-import { OptionConfig, PositionalConfig, Result } from '../types'
-import { camelCaseObjectKeys } from './camel-case-object-keys'
-import { findOptionConfig } from './find-option-config'
-import { insertShorthands } from './insert-shorthands'
-import { mapArgTypeToErrorMessage } from './map-arg-type-to-error-message'
-import { mapArgTypeToValueParser } from './map-arg-type-to-value-parser'
-import { parseOption } from './parse-option'
-import { parseBoolean } from './parse-value/parse-boolean'
-import { sortObjectByKey } from './sort-object-by-key'
+import { OptionConfig, PositionalConfig, Result } from '../../types'
+import { stopParsingOptionsArg } from '../constants'
+import { camelCaseObjectKeys } from './utilities/camel-case-object-keys'
+import { findOptionConfig } from './utilities/find-option-config'
+import { insertShorthands } from './utilities/insert-shorthands'
+import { mapArgTypeToErrorMessage } from './utilities/map-arg-type-to-error-message'
+import { mapArgTypeToValueParser } from './utilities/map-arg-type-to-value-parser'
+import { parseOption } from './utilities/parse-option'
+import { sortObjectByKey } from './utilities/sort-object-by-key'
+import { parseBoolean } from './utilities/value-parser/parse-boolean'
 
 export function parseArgs(
   args: Array<string>,

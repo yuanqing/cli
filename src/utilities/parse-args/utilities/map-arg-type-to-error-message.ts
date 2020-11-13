@@ -1,4 +1,4 @@
-import { Type } from '../types'
+import { Type } from '../../../types'
 import { stringifyEnum } from './stringify-enum'
 
 export function mapArgTypeToErrorMessage(type: Type, name: string): string {

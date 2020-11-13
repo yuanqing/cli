@@ -1,5 +1,5 @@
+import { CommandConfig, Result } from '../types'
 import { parseArgs } from './parse-args/parse-args'
-import { CommandConfig, Result } from './types'
 
 export function runCommand(
   args: Array<string>,

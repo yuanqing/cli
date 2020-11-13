@@ -1,7 +1,7 @@
-import { containsOption } from './contains-option'
-import { createHelp } from './help/create-help'
-import { runCommand } from './run-command'
 import { CliConfig, CommandConfig, Result } from './types'
+import { containsOption } from './utilities/contains-option'
+import { createHelp } from './utilities/help/create-help'
+import { runCommand } from './utilities/run-command'
 
 export function createCli(cliConfig: CliConfig, commandConfig: CommandConfig) {
   return function (args = process.argv.slice(2)): void | Result {

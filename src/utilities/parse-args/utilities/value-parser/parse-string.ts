@@ -1,4 +1,4 @@
-import { optionFlagRegex } from './regex'
+import { optionFlagRegex } from './regexes'
 
 export function parseString(arg: string): string {
   if (optionFlagRegex.test(arg) === true) {

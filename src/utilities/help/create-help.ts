@@ -1,4 +1,4 @@
-import { CommandConfig, OptionConfig, PositionalConfig } from '../types'
+import { CommandConfig, OptionConfig, PositionalConfig } from '../../types'
 import { stringifyCliArgs } from './utilities/stringify-cli-args'
 import { stringifyExamples } from './utilities/stringify-examples'
 import { stringifyRows } from './utilities/stringify-rows'

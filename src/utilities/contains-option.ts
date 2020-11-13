@@ -1,4 +1,4 @@
-import { stopParsingOptionsArg } from './stop-parsing-options-arg'
+import { stopParsingOptionsArg } from './constants'
 
 export function containsOption(
   args: Array<string>,
