@@ -4,7 +4,7 @@ export function stringifyExamples(
 ): string {
   const result = []
   for (const example of examples) {
-    result.push(`    $ ${name} ${example}`)
+    result.push(`    $ ${name} ${example}`.trim())
   }
   return result.join('\n')
 }
