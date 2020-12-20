@@ -4,7 +4,11 @@ export function stringifyExamples(
 ): string {
   const result = []
   for (const example of examples) {
-    result.push(`    $ ${name} ${example}`.trim())
+    if (example === '') {
+      result.push(`    $ ${name}`)
+      continue
+    }
+    result.push(`    $ ${name} ${example}`)
   }
   return result.join('\n')
 }
